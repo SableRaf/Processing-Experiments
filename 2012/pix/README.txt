@@ -7,5 +7,4 @@ Tested in Processing 2.0b7
 Shader support is still beta in Processing at the moment 
 so this sketch might not work anymore in the final release.
  
- * Arrow UP to enlarge the square module by 1 pixel
- * Arrow DOWN to reduce the square module by 1 pixel
+ * Arrow UP/DOWN to enlarge/reduce the square module by 1 pixel
