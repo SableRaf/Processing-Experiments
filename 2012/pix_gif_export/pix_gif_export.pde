@@ -17,18 +17,18 @@ PShader myShader;
 int side = 3; // default grid width
 int seed = 0; // default random seed (no need to edit this one)
 
-int freq = 1000; // speed of the refresh (in ms)
+int freq = 333; // speed of the refresh (in ms)
 
 GifMaker gifExport;
 boolean isRecording = false;
 boolean isFinished = false;
 
 void setup() {
-  //size(200, 200, P2D);
-  size(displayWidth, displayHeight, P2D);
+  size(640, 960, P2D);
+  //size(displayWidth, displayHeight, P2D);
   noSmooth();
   noCursor();
-  //frameRate(freq/1000);
+  frameRate(1000/freq);
   
   gifInit();
   
