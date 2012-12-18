@@ -15,7 +15,7 @@ int side = 3; // default grid width
 int seed = 0; // default random seed (no need to edit this one)
 
 void setup() {
-  size(800, 600, P2D);
+  size(200, 200, P2D);
   //size(displayWidth, displayHeight, P2D);
   noSmooth();
   noCursor();
@@ -56,6 +56,6 @@ void draw() {
 }
 
 void keyPressed() {
-  if(keyCode == UP && side<10) side++;
-  if(keyCode == DOWN && side>2) side--;
+  if(keyCode == UP) { side++; println("side="+side); }
+  if(keyCode == DOWN && side>2) { side--; println("side="+side); }
 }

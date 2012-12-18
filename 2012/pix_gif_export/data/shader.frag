@@ -1,3 +1,5 @@
+// Some shader code from: http://thndl.com/
+
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -21,6 +23,13 @@ float rand(vec2 p)
  return fract(r.x*r.y);
 }
 
+float randSeed(vec2 p, float s)
+{
+    p+=.2127+p.x+.3713*p.y;
+    vec2 r=4.789*sin(789.123*(p)+s);
+    return fract(r.x*r.y);
+}
+
 void main(void)
 {    
  // c will contain the position information for the current fragment (from -1,-1 to 1,1)
@@ -35,7 +44,7 @@ void main(void)
  float t = time;
     
  // define the color of the current pixel
- f=vec4(step(.5,rand(floor(vec2(resolution.xy)*d.xy)+seed)));
+ f=vec4( step( .5, randSeed( vec2(d.xy), seed ) ) );
     
  // apply the color
  gl_FragColor = f;

@@ -24,7 +24,7 @@ boolean isRecording = false;
 boolean isFinished = false;
 
 void setup() {
-  size(640, 960, P2D);
+  size(800, 800, P2D);
   //size(displayWidth, displayHeight, P2D);
   noSmooth();
   noCursor();
@@ -70,8 +70,8 @@ void draw() {
 }
 
 void keyPressed() {
-  if(keyCode == UP && side<10) side++;
-  if(keyCode == DOWN && side>2) side--;
+  if(keyCode == UP) { side++; println("side="+side); }
+  if(keyCode == DOWN && side>2) { side--; println("side="+side); }
 }
 
 void keyReleased() {
