@@ -9,4 +9,3 @@ Distributed under the GRL CreativeCommons license:
 http://goo.gl/Ypucq (or see license file attached)
 
 PS Move Api By Thomas Perl: http://thp.io/2010/psmove/
-Note: Most of those sketches can also be found in the API's "examples" folder.
