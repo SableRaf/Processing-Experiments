@@ -212,5 +212,12 @@ class GunManager extends MoveManager {
     
    super.update();
   }
+  
+  
+  // --- Visual feedback ---------------------------
+  
+  public void display() {
+    magazine.display();
+  }
 }
 

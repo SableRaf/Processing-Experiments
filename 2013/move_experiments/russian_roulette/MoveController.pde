@@ -1,4 +1,6 @@
 class MoveController extends PSMove {
+
+  private boolean debug = false; // Change to true to print debug messages
   
   private boolean has_orientation = true;
 
@@ -36,8 +38,17 @@ class MoveController extends PSMove {
 
   private MoveButton[] moveButtons = new MoveButton[9];  // The move controller has 9 buttons
 
+  // Button presses (continuous)
   boolean isTriggerPressed, isMovePressed, isSquarePressed, isTrianglePressed, isCrossPressed, isCirclePressed, isStartPressed, isSelectPressed, isPsPressed; 
   int trigger_value=0;
+  
+  // Button presses (events)
+  long [] pressed = {0};
+  boolean isMovePressedEvent, isSquarePressedEvent, isTrianglePressedEvent, isCrossPressedEvent, isCirclePressedEvent, isStartPressedEvent, isSelectPressedEvent, isPsPressedEvent;
+  
+  // Button releases (events)
+  long [] released = {0};
+  boolean isMoveReleasedEvent, isSquareReleasedEvent, isTriangleReleasedEvent, isCrossReleasedEvent, isCircleReleasedEvent, isStartReleasedEvent, isSelectReleasedEvent, isPsReleasedEvent;
   
   int rumbleLevel;
 
@@ -187,6 +198,110 @@ class MoveController extends PSMove {
     return isPsPressed;
   }    
 
+  // Get button events 
+  // Tells if a given button was pressed/released
+  // since the last call to the event function
+  
+  // Pressed
+  
+  boolean isMovePressedEvent() {
+    boolean event = isMovePressedEvent;
+    isMovePressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isSquarePressedEvent() {
+    boolean event = isSquarePressedEvent;
+    isSquarePressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isTrianglePressedEvent() {
+    boolean event = isTrianglePressedEvent;
+    isTrianglePressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isCrossPressedEvent() {
+    boolean event = isCrossPressedEvent;
+    isCrossPressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isCirclePressedEvent() {
+    boolean event = isCirclePressedEvent;
+    isCirclePressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isSelectPressedEvent() {
+    boolean event = isSelectPressedEvent;
+    isSelectPressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isStartPressedEvent() {
+    boolean event = isStartPressedEvent;
+    isStartPressedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isPsPressedEvent() {
+    boolean event = isPsPressedEvent;
+    isPsPressedEvent = false; // Reset the event catcher
+    return event;
+  }   
+  
+  // Released
+  
+  boolean isMoveReleasedEvent() {
+    boolean event = isMoveReleasedEvent;
+    isMoveReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isSquareReleasedEvent() {
+    boolean event = isSquareReleasedEvent;
+    isSquareReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isTriangleReleasedEvent() {
+    boolean event = isTriangleReleasedEvent;
+    isTriangleReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isCrossReleasedEvent() {
+    boolean event = isCrossReleasedEvent;
+    isCrossReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isCircleReleasedEvent() {
+    boolean event = isCircleReleasedEvent;
+    isCircleReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isSelectReleasedEvent() {
+    boolean event = isSelectReleasedEvent;
+    isSelectReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isStartReleasedEvent() {
+    boolean event = isStartReleasedEvent;
+    isStartReleasedEvent = false; // Reset the event catcher
+    return event;
+  }
+  
+  boolean isPsReleasedEvent() {
+    boolean event = isPsReleasedEvent;
+    isPsReleasedEvent = false; // Reset the event catcher
+    return event;
+  }   
+
   
   // --- Inherited methods --------------------
   
@@ -234,6 +349,7 @@ class MoveController extends PSMove {
   // Read inputs from the move (buttons and sensors)
   protected void update_poll() { 
     //println("update_buttons()");
+        
     while (super.poll() != 0) {
       
       battery_level = super.get_battery(); // Save the battery level of the controller
@@ -246,7 +362,9 @@ class MoveController extends PSMove {
       int trigger = super.get_trigger();
       moveButtons[0].setValue(trigger);
   
+      // Start by reading from the controller
       int buttons = super.get_buttons();
+      // Then update the MoveButton objects
       if ((buttons & Button.Btn_MOVE.swigValue()) != 0) {
         moveButtons[1].press();
       } 
@@ -295,9 +413,70 @@ class MoveController extends PSMove {
       else {
         moveButtons[8].release();
       }
+      
+      // Start by reading from the controller
+      super.get_button_events(pressed, released);
+      // Then register the current events
+      if ((pressed[0] & Button.Btn_MOVE.swigValue()) != 0) {
+        if(debug) println("The Move button was just pressed.");
+        isMovePressedEvent = true;
+      } else if ((released[0] & Button.Btn_MOVE.swigValue()) != 0) {
+        if(debug) println("The Move button was just released.");
+        isMoveReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_SQUARE.swigValue()) != 0) {
+        if(debug) println("The Square button was just pressed.");
+        isSquarePressedEvent = true;
+      } else if ((released[0] & Button.Btn_SQUARE.swigValue()) != 0) {
+        if(debug) println("The Square button was just released.");
+        isSquareReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_TRIANGLE.swigValue()) != 0) {
+        if(debug) println("The Triangle button was just pressed.");
+        isTrianglePressedEvent = true;
+      } else if ((released[0] & Button.Btn_TRIANGLE.swigValue()) != 0) {
+        if(debug) println("The Triangle button was just released.");
+        isTriangleReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_CROSS.swigValue()) != 0) {
+        if(debug) println("The Cross button was just pressed.");
+        isCrossPressedEvent = true;
+      } else if ((released[0] & Button.Btn_CROSS.swigValue()) != 0) {
+        if(debug) println("The Cross button was just released.");
+        isCrossReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_CIRCLE.swigValue()) != 0) {
+        if(debug) println("The Circle button was just pressed.");
+        isCirclePressedEvent = true;
+      } else if ((released[0] & Button.Btn_CIRCLE.swigValue()) != 0) {
+        if(debug) println("The Circle button was just released.");
+        isCircleReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_START.swigValue()) != 0) {
+        if(debug) println("The Start button was just pressed.");
+        isStartPressedEvent = true;
+      } else if ((released[0] & Button.Btn_START.swigValue()) != 0) {
+        if(debug) println("The Start button was just released.");
+        isStartReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_SELECT.swigValue()) != 0) {
+        if(debug) println("The Select button was just pressed.");
+        isSelectPressedEvent = true;
+      } else if ((released[0] & Button.Btn_SELECT.swigValue()) != 0) {
+        if(debug) println("The Select button was just released.");
+        isSelectReleasedEvent = true;
+      }
+      if ((pressed[0] & Button.Btn_PS.swigValue()) != 0) {
+        if(debug) println("The PS button was just pressed.");
+        isPsPressedEvent = true;
+      } else if ((released[0] & Button.Btn_PS.swigValue()) != 0) {
+        if(debug) println("The PS button was just released.");
+        isPsReleasedEvent = true;
+      }      
     }
   
     // Store the values in conveniently named variables
+    // (Some heavy redundancy here... is the MoveButton class really useful?)
     trigger_value        = moveButtons[0].value;
     isTriggerPressed     = moveButtons[0].getPressed(); // The trigger is considered pressed if value > 0
     isMovePressed        = moveButtons[1].getPressed();

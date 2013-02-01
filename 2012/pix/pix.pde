@@ -15,11 +15,11 @@ int side = 3; // default grid width
 int seed = 0; // default random seed (no need to edit this one)
 
 void setup() {
-  size(200, 200, P2D);
-  //size(displayWidth, displayHeight, P2D);
+  //size(200, 200, P2D);
+  size(displayWidth, displayHeight, P2D);
   noSmooth();
   noCursor();
-  frameRate(1);
+  frameRate(3);
   
   /*
   myShader = loadShader("shader.frag");

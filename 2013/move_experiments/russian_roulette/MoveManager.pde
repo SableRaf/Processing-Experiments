@@ -28,7 +28,7 @@ class MoveManager {
 
     // This is only fun if we actually have controllers
     if (total_connected == 0) {
-      print("WARNING: No controllers connected.");
+      println("WARNING: No controllers connected.");
     }
 
     // Filter via connection type to avoid duplicates

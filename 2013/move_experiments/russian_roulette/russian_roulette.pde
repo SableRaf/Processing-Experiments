@@ -16,10 +16,6 @@ void setup() {
   size(200,200);
   gunManager = new GunManager(magazineSize);
   sphereColor = color(255,0,0);
-  
-  if(isRoulette) {
-    gunManager.setupRoulette(numBullets);
-  }
 }
 
 void draw() {
@@ -27,17 +23,18 @@ void draw() {
     
   // Provided we have an active gun...
   if(gunManager.isInit()) {
+    
     gunManager.update();
     
     // Visual feedback on the firing
     if(gunManager.isFiring())
       background(random(100,255));
     
-    if(gunManager.gun.isMovePressed())
+    if(gunManager.gun.isMovePressedEvent())
       gunManager.arm();
       
-    if(gunManager.gun.isCrossPressed())
-      gunManager.setupRoulette(numBullets); // reset the roulette game
+    if(gunManager.gun.isCrossPressedEvent())
+      gunManager.setupRoulette(numBullets); // (re)set the roulette game
     
     // Trigger
     if(gunManager.isClick())
@@ -46,6 +43,8 @@ void draw() {
     // Show the orientation of the gun
     float angle = gunManager.getAngle();
     displayAngle(angle);
+    
+    gunManager.display();
   }
   // Otherwise, we try to activate the gun
   else {

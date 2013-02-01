@@ -86,13 +86,13 @@ class Magazine {
 
     if (!isFinished) { // Are we sure we are not past the last slot?
       if (slots[activeSlot] == 1) {
-        println("Firing slot "+ (activeSlot+1) );
+        println("Slot "+ (activeSlot+1) + " BAAAANG!" );
         unloadAt(activeSlot); // Empty the slot
         activeSlot++;         // Move to the next slot
         return true;
       }
       else {
-        println("Slot "+ (activeSlot+1) +" was empty");
+        println("Slot "+ (activeSlot+1) +" empty");
         activeSlot++;         // Move to the next slot
       }
     }
@@ -104,13 +104,13 @@ class Magazine {
         activeSlot = 0; // The cylinder rotates back to the first chamber
         
         if (slots[activeSlot] == 1) {
-          println("Firing slot "+ (activeSlot+1) );
+          println("Slot "+ (activeSlot+1) + " BAAAANG!" );
           unloadAt(activeSlot); // Empty the slot
           activeSlot++;
           return true;
         }
         else {
-          println("Slot "+ (activeSlot+1) +" was empty");
+          println("Slot "+ (activeSlot+1) +" empty");
           activeSlot++;
         }
         
@@ -132,4 +132,7 @@ class Magazine {
     }
     return activeSlot;
   }
+  
+  // Visual feedback
+  public void display() {   }
 }
