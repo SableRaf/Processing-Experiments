@@ -8,9 +8,10 @@ class MoveManager {
   private HashMap<String, MoveController> controllers;
   
   // The same controller connected via USB and Bluetooth 
-  // shows twice. If enabled, USB controllers will be replaced 
-  // with their Bluetooth counterpart when found. Otherwise,
-  // it is "first in first served".
+  // shows twice. If priority_bluetooth is enabled, USB 
+  // controllers will be replaced with their Bluetooth 
+  // counterpart when one is found. 
+  // Otherwise, it is "first in first served".
   boolean priority_bluetooth = true;
   
   MoveManager() {

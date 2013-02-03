@@ -47,7 +47,7 @@ class GunManager extends MoveManager {
       //println("id = "+id);
       MoveController move = super.controllers.get(id);    // Give me the controller with that MAC address
       move.update();
-      if (move.isStartPressed()) {
+      if (move.isStartPressedEvent()) {
         gun = move;
         println("Move with serial "+id+" is now the gun.");
       }
@@ -64,12 +64,12 @@ class GunManager extends MoveManager {
   
   void reload() {
     magazine.reload();
-    println("Gun reloaded");
+    println("Gun fully reloaded");
   }
   
   void empty() {
     magazine.unload();
-    println("Gun cleared");
+    println("Magazine cleared");
   }
   
   void spin() {
@@ -79,6 +79,16 @@ class GunManager extends MoveManager {
   
   // Put a set number of rounds randomly in the cylinder
   void loadRandom(int bullets) {
+    
+    if (bullets < 0)
+      println("You must load a positive number of bullets. Error: bullets = "+bullets+ " The value will be clamped.");
+    else if (bullets > magazineSize)
+      println("Trying to load too many bullets ("+bullets+") for the magazineSize ("+magazineSize+"). The value will be clamped.");
+    
+    bullets = constrain(bullets, 0, magazineSize); // Limit the nb of bullets to an acceptable range
+    String plural = "";
+    if (bullets > 1) plural = "s";
+    println("Loading "+bullets+" bullet"+plural+" in the magazine.");
     magazine.loadRandom(bullets);
   }
   

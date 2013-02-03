@@ -5,7 +5,7 @@ import java.util.Set;
 
 boolean isRoulette = true;   // Are we in soviet russia?
 int numBullets = 1;          // How many bullets do we want to play with?
-int magazineSize = 6;        // Default is 6, obviously
+int magazineSize = 6;        // Default is 6, obviously :)
 
 GunManager gunManager;
 
@@ -30,11 +30,14 @@ void draw() {
     if(gunManager.isFiring())
       background(random(100,255));
     
-    if(gunManager.gun.isMovePressedEvent())
+    if(gunManager.gun.isSelectPressedEvent())
       gunManager.arm();
       
-    if(gunManager.gun.isCrossPressedEvent())
+    if(gunManager.gun.isMovePressedEvent())
       gunManager.setupRoulette(numBullets); // (re)set the roulette game
+    
+    if(gunManager.gun.isPsPressedEvent())
+      gunManager.spin(); // spin the cylinder
     
     // Trigger
     if(gunManager.isClick())

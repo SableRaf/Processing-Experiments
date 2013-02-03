@@ -66,7 +66,8 @@ class Magazine {
   }
 
   public void loadRandom(int bullets) {
-    for (int i=0; i<bullets; i++) { 
+    // Debug: avoid picking the same slot several times in a row
+    for (int i=0; i<bullets; i++) {
       loadAt((int)random(slots.length-1)); // load a bullet anywhere in the magazine
     }
   }
