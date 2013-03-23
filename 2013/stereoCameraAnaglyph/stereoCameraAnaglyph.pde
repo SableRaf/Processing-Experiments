@@ -28,7 +28,7 @@ Float stereo = 0.0;   // allows for small alignment adjustments to the images
  
 void setup() 
 {
-  size(500,300,P3D);
+  size(500,500,P3D);
   //size(displayWidth,displayHeight,P3D);
   
   left = createGraphics(width, height, P3D);
