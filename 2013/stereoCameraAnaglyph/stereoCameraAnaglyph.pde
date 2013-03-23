@@ -13,15 +13,24 @@
 
 // SPACE: switch between the two anaglyph modes
 // X: switch 3D on/off
+// MouseY: traveling (Z axis)
+// MouseX: 3D effect
  
 float rotation;
 
 boolean isShader = true;
 boolean isOptimised = true;
 
+float eyeX = 0;
+float eyeY = 0;
+float eyeZ = -100; // position of the viewer
+float eyeDist = 3; // distance between the two cameras, the higher, the more the graphics will "pop out"
+
+
 PShader simple_anaglyph, optimised_anaglyph;
 PGraphics left, right;
- 
+
+// Shader uniforms
 Float contrast = 0.4; // lets us adjust the apparent colour saturation (based on the contrast between channels) better left between 0.5 and 1.0
 Float deghost = 0.6;  // Amount of deghosting (via channel subtraction)
 Float stereo = 0.0;   // allows for small alignment adjustments to the images
@@ -37,14 +46,15 @@ void setup()
   simple_anaglyph = loadShader("simple_anaglyph.glsl");
   optimised_anaglyph = loadShader("optimised_anaglyph.glsl");
   
-  perspective(PI/3.0,1,0.1,1000); //this is needed ot stop the images being squashed
-  noStroke();
   rotation=0;
 }
  
 void draw()
 {
   PShader s;
+  
+  eyeZ = map(mouseY, 0, height, -100, -200);
+  eyeDist = map(mouseX, 0, width, 0, 7);
   
   s = simple_anaglyph;
   
@@ -70,14 +80,15 @@ void draw()
   left.background(0);
   left.fill(255);
   left.noStroke();
-  left.camera(-5,0,-100,0,0,0,0,-1,0);
   left.pushMatrix();
   left.rotateX(rotation);
   left.rotateY(rotation/2.3);
+  left.scale(height*.003);
   left.box(30);
   left.translate(0,0,30);
   left.box(10);
   left.popMatrix();
+  left.camera(eyeX-eyeDist/2, eyeY, eyeZ, 0,0,0,0,-1,0);
   left.endDraw();
  
   // Right Eye
@@ -87,17 +98,16 @@ void draw()
   right.background(0);
   right.fill(255);
   right.noStroke();
-  right.camera(5,0,-100,0,0,0,0,-1,0);
   right.pushMatrix();
   right.rotateX(rotation);
   right.rotateY(rotation/2.3);
+  right.scale(height*.003);
   right.box(30);
   right.translate(0,0,30);
   right.box(10);
   right.popMatrix();
+  right.camera(eyeX+eyeDist/2, eyeY, eyeZ,0,0,0,0,-1,0);
   right.endDraw();
-  
-  PImage scene;
   
   if(isShader) 
    shader(s);
