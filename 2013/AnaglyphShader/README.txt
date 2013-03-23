@@ -11,7 +11,7 @@ http://iaian7.com/quartz/AnaglyphCompositing
 
 Adapted for Processing by Raphaël de Courville <Twitter: @sableRaph>
 
-Photo by Hiroshi Yoshinaga
+Stereoscopic photo by Hiroshi Yoshinaga
 http://www.flickr.com/photos/parallel_yoshing/4429541662/
 
 
