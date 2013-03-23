@@ -68,8 +68,8 @@ void draw()
   left.ambientLight(64,64,64); //some lights to aid the effect
   left.pointLight(128,128,128,0,20,-50);
   left.background(0);
-  left.noFill();
-  left.stroke(255);
+  left.fill(255);
+  left.noStroke();
   left.camera(-5,0,-100,0,0,0,0,-1,0);
   left.pushMatrix();
   left.rotateX(rotation);
@@ -85,8 +85,8 @@ void draw()
   right.ambientLight(64,64,64); //some lights to aid the effect
   right.pointLight(128,128,128,0,20,-50);
   right.background(0);
-  right.noFill();
-  right.stroke(255);
+  right.fill(255);
+  right.noStroke();
   right.camera(5,0,-100,0,0,0,0,-1,0);
   right.pushMatrix();
   right.rotateX(rotation);
