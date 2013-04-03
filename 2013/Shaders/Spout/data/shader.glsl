@@ -17,8 +17,8 @@ uniform vec2 mouse;
 vec3 iResolution = vec3(resolution,0.0);
 float iGlobalTime = time;
 
-uniform vec2 mousePressed;
-vec4 iMouse = vec4(mouse.xy,mousePressed.xy); // zw would normally be the click status
+uniform vec2 mousePressed; // (0.0,0.0) no click, (1.0,1.0) left mouse button pressed
+vec4 iMouse = vec4(mouse.xy,mousePressed.xy);
 
 uniform sampler2D iChannel0;
 
