@@ -1,15 +1,20 @@
 PShader myShader;
-PImage tex00;
+PImage tex00, tex01, tex02;
 
 void setup() {
   size(640, 360, P2D);
   noStroke();
   
   tex00 = loadImage("tex00.jpg");
+  tex01 = loadImage("tex01.jpg");
+  tex02 = loadImage("tex02.jpg");
  
   myShader = loadShader("shader.glsl");
-  myShader.set("resolution", float(width), float(height));  
-  myShader.set("iChannel0",tex00); 
+  myShader.set("resolution", float(width), float(height));   
+  
+  myShader.set("iChannel0",tex00);
+  myShader.set("iChannel1",tex01);
+  myShader.set("iChannel2",tex02);
 }
 
 void draw() {
