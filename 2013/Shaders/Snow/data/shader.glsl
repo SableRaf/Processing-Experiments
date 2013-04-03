@@ -1,9 +1,6 @@
 // SNOW SHADER
 // Based on https://www.shadertoy.com/view/4dl3R4 by HeGu
 
- // This shader uses noise shaders by stegu -- http://webstaff.itn.liu.se/~stegu/
- // This is supposed to look like snow falling, for example like http://24.media.tumblr.com/tumblr_mdhvqrK2EJ1rcru73o1_500.gif
-
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -15,6 +12,16 @@ precision highp float;
 uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
+
+// Layer between Processing and Shadertoy uniforms
+vec3 iResolution = vec3(resolution,0.0);
+float iGlobalTime = time;
+vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
+
+// ------- Below is the unmodified Shadertoy code ----------
+
+// This shader useds noise shaders by stegu -- http://webstaff.itn.liu.se/~stegu/
+// This is supposed to look like snow falling, for example like http://24.media.tumblr.com/tumblr_mdhvqrK2EJ1rcru73o1_500.gif
 
 vec2 mod289(vec2 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -114,9 +121,9 @@ void main(void)
 {
 		float speed=2.0;
 		
-		vec2 uv = gl_FragCoord.xy / resolution.xy;
+		vec2 uv = gl_FragCoord.xy / iResolution.xy;
 		
-		uv.x*=(resolution.x/resolution.y);
+		uv.x*=(iResolution.x/iResolution.y);
 		
 		vec2 suncent=vec2(0.3,0.9);
 		
@@ -133,8 +140,8 @@ void main(void)
 		slope=clamp(slope,0.0,1.0);
 								
 		vec2 GA;
-		GA.x-=time*1.8;
-		GA.y+=time*0.9;
+		GA.x-=iGlobalTime*1.8;
+		GA.y+=iGlobalTime*0.9;
 		GA*=speed;
 	
 		float F1=0.0,F2=0.0,F3=0.0,F4=0.0,F5=0.0,N1=0.0,N2=0.0,N3=0.0,N4=0.0,N5=0.0;
