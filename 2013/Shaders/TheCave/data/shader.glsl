@@ -24,6 +24,8 @@ uniform sampler2D iChannel0;
 uniform sampler2D iChannel1;
 uniform sampler2D iChannel2;
 
+// ------- Below is the unmodified Shadertoy code ----------
+
 
 // constants for the camera tunnel
 const vec2 cama=vec2(-2.6943,3.0483);
