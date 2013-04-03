@@ -16,6 +16,13 @@ uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
 
+// Layer between Processing and Shadertoy uniforms
+vec3 iResolution = vec3(resolution,0.0);
+float iGlobalTime = time;
+vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
+
+// ------- Below is the unmodified Shadertoy code ----------
+
 
 float noise(vec3 p) //Thx to Las^Mercury
 {
@@ -38,7 +45,7 @@ float sphere(vec3 p, vec4 spr)
 float fire(vec3 p)
 {
 	float d= sphere(p*vec3(1.,.5,1.), vec4(.0,-1.,.0,1.));
-	return d+(noise(p+vec3(.0,time*2.,.0))+noise(p*3.)*.5)*.25*(p.y) ;
+	return d+(noise(p+vec3(.0,iGlobalTime*2.,.0))+noise(p*3.)*.5)*.25*(p.y) ;
 }
 //-----------------------------------------------------------------------------
 // Raymarching tools
@@ -78,8 +85,8 @@ vec4 Raymarche(vec3 org, vec3 dir)
 
 void main()
 {
-	vec2 v = -1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
-	v.x *= resolution.x/resolution.y;
+	vec2 v = -1.0 + 2.0 * gl_FragCoord.xy / iResolution.xy;
+	v.x *= iResolution.x/iResolution.y;
 	vec3 org = vec3(0.,-2.,4.);
 	vec3 dir   = normalize(vec3(v.x*1.6,-v.y,-1.5));
 	vec4 p = Raymarche(org,dir);

@@ -21,6 +21,8 @@ vec3 iResolution = vec3(resolution,0.0);
 float iGlobalTime = time;
 vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
 
+// ------- Below is the unmodified Shadertoy code ----------
+
 mat3 m = mat3( 0.00,  0.80,  0.60,
               -0.80,  0.36, -0.48,
               -0.60, -0.48,  0.64 );

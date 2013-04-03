@@ -12,6 +12,14 @@ uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
 
+// Layer between Processing and Shadertoy uniforms
+vec3 iResolution = vec3(resolution,0.0);
+float iGlobalTime = time;
+vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
+
+// ------- Below is the unmodified Shadertoy code ----------
+
+
 float snoise(vec3 uv, float res)
 {
 	const vec3 s = vec3(1e0, 1e2, 1e4);
@@ -37,8 +45,8 @@ float snoise(vec3 uv, float res)
 
 void main(void) 
 {
-	vec2 p = -.5 + gl_FragCoord.xy / resolution.xy;
-	p.x *= resolution.x/resolution.y;
+	vec2 p = -.5 + gl_FragCoord.xy / iResolution.xy;
+	p.x *= iResolution.x/iResolution.y;
 	
 	float color = 3.0 - (3.*length(2.*p));
 	
@@ -47,7 +55,7 @@ void main(void)
 	for(int i = 1; i <= 7; i++)
 	{
 		float power = pow(2.0, float(i));
-		color += (1.5 / power) * snoise(coord + vec3(0.,-time*.05, time*.01), power*16.);
+		color += (1.5 / power) * snoise(coord + vec3(0.,-iGlobalTime*.05, iGlobalTime*.01), power*16.);
 	}
 	gl_FragColor = vec4( color, pow(max(color,0.),2.)*0.4, pow(max(color,0.),3.)*0.15 , 1.0);
 }
