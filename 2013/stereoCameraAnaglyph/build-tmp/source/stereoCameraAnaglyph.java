@@ -1,3 +1,19 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class stereoCameraAnaglyph extends PApplet {
+
 
 // stereo viewing taken from http://wiki.processing.org/index.php?title=Stereo_viewing
 // @author John Gilbertson
@@ -8,7 +24,7 @@
 // Simple anaglyph shader by r3dux
 // http://r3dux.org/2011/05/anaglyphic-3d-in-glsl/
  
-// Adapted for Processing 2.0 by Raphaël de Courville
+// Adapted for Processing 2.0 by Rapha\u00ebl de Courville
 // https://twitter.com/sableRaph
 
 // SPACE: switch between the two anaglyph modes
@@ -34,11 +50,11 @@ PShader simple_anaglyph, optimised_anaglyph;
 PGraphics left, right;
 
 // Shader uniforms
-Float contrast = 0.4; // lets us adjust the apparent colour saturation (based on the contrast between channels) better left between 0.5 and 1.0
-Float deghost = 0.6;  // Amount of deghosting (via channel subtraction)
-Float stereo = 0.0;   // allows for small alignment adjustments to the images
+Float contrast = 0.4f; // lets us adjust the apparent colour saturation (based on the contrast between channels) better left between 0.5 and 1.0
+Float deghost = 0.6f;  // Amount of deghosting (via channel subtraction)
+Float stereo = 0.0f;   // allows for small alignment adjustments to the images
  
-void setup() 
+public void setup() 
 {
   size(500,500,P3D);
   //size(displayWidth,displayHeight,P3D);
@@ -52,7 +68,7 @@ void setup()
   rotation=0;
 }
  
-void draw()
+public void draw()
 {
   PShader s;
   
@@ -73,7 +89,7 @@ void draw()
   
   resetShader();
   
-  rotation+=0.01; //you can vary the speed of rotation by altering this value
+  rotation+=0.01f; //you can vary the speed of rotation by altering this value
  
   // Left Eye
   // Using Camera gives us much more control over the eye position
@@ -85,8 +101,8 @@ void draw()
   left.noStroke();
   left.pushMatrix();
   left.rotateX(rotation);
-  left.rotateY(rotation/2.3);
-  left.scale(height*.003);
+  left.rotateY(rotation/2.3f);
+  left.scale(height*.003f);
   left.box(30);
   left.translate(0,0,30);
   left.box(10);
@@ -103,8 +119,8 @@ void draw()
   right.noStroke();
   right.pushMatrix();
   right.rotateX(rotation);
-  right.rotateY(rotation/2.3);
-  right.scale(height*.003);
+  right.rotateY(rotation/2.3f);
+  right.scale(height*.003f);
   right.box(30);
   right.translate(0,0,30);
   right.box(10);
@@ -119,7 +135,7 @@ void draw()
 }
 
 
-void keyPressed() {
+public void keyPressed() {
  if(key == ' ') { 
    isOptimised = !isOptimised; 
    println("isOptimised = "+ isOptimised);
@@ -128,4 +144,13 @@ void keyPressed() {
    isShader = !isShader; 
    println("isShader = "+ isShader);
  }
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "stereoCameraAnaglyph" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }

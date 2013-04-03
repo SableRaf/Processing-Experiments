@@ -29,6 +29,7 @@ float eyeY = 0;
 float eyeZ = -100; // position of the viewer
 float eyeDist = 3; // distance between the two cameras, the higher, the more the graphics will "pop out"
 
+Satellite satellite;
 
 PShader simple_anaglyph, optimised_anaglyph;
 PGraphics left, right;
@@ -40,8 +41,8 @@ Float stereo = 0.0;   // allows for small alignment adjustments to the images
  
 void setup() 
 {
-  size(500,500,P3D);
-  //size(displayWidth,displayHeight,P3D);
+  //size(500,500,P3D);
+  size(displayWidth,displayHeight,P3D);
   
   left = createGraphics(width, height, P3D);
   right = createGraphics(width, height, P3D);
@@ -75,6 +76,11 @@ void draw()
   
   rotation+=0.01; //you can vary the speed of rotation by altering this value
  
+  PVector satellite = new PVector (0,0,0);
+  satellite.x = 0;
+  satellite.y = 0;
+  satellite.z = 0;
+ 
   // Left Eye
   // Using Camera gives us much more control over the eye position
   left.beginDraw();
@@ -86,10 +92,12 @@ void draw()
   left.pushMatrix();
   left.rotateX(rotation);
   left.rotateY(rotation/2.3);
-  left.scale(height*.003);
+  //left.scale(height*.003);
   left.box(30);
   left.translate(0,0,30);
   left.box(10);
+  left.translate(0,0,-100);
+  left.box(20);
   left.popMatrix();
   left.camera(eyeX-eyeDist/2, eyeY, eyeZ, 0,0,0,0,-1,0);
   left.endDraw();
@@ -104,10 +112,12 @@ void draw()
   right.pushMatrix();
   right.rotateX(rotation);
   right.rotateY(rotation/2.3);
-  right.scale(height*.003);
+  //right.scale(height*.003);
   right.box(30);
   right.translate(0,0,30);
   right.box(10);
+  right.translate(0,0,-100);
+  right.box(20);
   right.popMatrix();
   right.camera(eyeX+eyeDist/2, eyeY, eyeZ,0,0,0,0,-1,0);
   right.endDraw();
@@ -117,7 +127,6 @@ void draw()
   
   image(left,0,0,width, height);  // Any image will do but we have to call the function
 }
-
 
 void keyPressed() {
  if(key == ' ') { 
