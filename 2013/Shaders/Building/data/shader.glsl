@@ -13,8 +13,14 @@ uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
 
+// Layer between Processing and Shadertoy uniforms
+vec3 iResolution = vec3(resolution,0.0);
+float iGlobalTime = time;
+vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
 
-float myTime;
+
+
+float myTime; // This one had to be renamed because "time" is a Processing standard uniform
 
 // ******* Tools  ******* 
 
@@ -98,12 +104,12 @@ void raymarch(vec3 p,vec3 r){
 
 void main(void){
  
-    myTime        = time*2.0;
-    float pulse	= pow(max(sin(myTime*0.5),0.0)*0.98,50.0);
+    myTime = iGlobalTime*2.0;
+    float pulse	 = pow(max(sin(myTime*0.5),0.0)*0.98,50.0);
 	
-	vec2 uv     = gl_FragCoord.xy/(resolution.xx*0.5)-vec2(1.0,resolution.y/resolution.x);
+	vec2 uv     = gl_FragCoord.xy/(iResolution.xx*0.5)-vec2(1.0,iResolution.y/iResolution.x);
     vec3 ray1   = normalize(vec3(uv.x,uv.y,0.5));   
-    vec3 campos = path(myTime)+vec3(mouse.x,-50.0+mouse.y,500.0+sin(myTime*0.02)*400.0);
+    vec3 campos = path(myTime)+vec3(iMouse.x,-50.0+iMouse.y,500.0+sin(myTime*0.02)*400.0);
     vec3 lightpos = path(myTime+0.5);
     
 	
