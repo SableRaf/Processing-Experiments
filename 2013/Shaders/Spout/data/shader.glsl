@@ -27,12 +27,12 @@ uniform sampler2D iChannel0;
 // Spout - @P_Malin
 
 // Remove the following line for more quality if your GPU / browser will allow
-#define LOW_QUALITY
+// #define LOW_QUALITY
 
 #ifdef LOW_QUALITY
     #define kRaymarchMaxIter 16
 #else
-    #define kRaymarchMaxIter 32
+    #define kRaymarchMaxIter 256
     
     #define ENABLE_AMBIENT_OCCLUSION
     #define DOUBLE_SIDED_TRANSPARENCY
