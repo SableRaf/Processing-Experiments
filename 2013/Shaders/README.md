@@ -1,1 +1,1 @@
-An ongoing collection of GLSL Shaders ported to Processing from [Shadertoy]<https://www.shadertoy.com>
+An ongoing collection of GLSL Shaders ported to Processing from <https://www.shadertoy.com>
