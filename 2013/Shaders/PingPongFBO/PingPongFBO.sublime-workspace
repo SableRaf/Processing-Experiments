@@ -1,0 +1,258 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"X",
+				"x"
+			],
+			[
+				"vec",
+				"vec2"
+			],
+			[
+				"mouse",
+				"mousePressed"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/C++/Cinder.sublime-build",
+	"command_palette":
+	{
+		"height": 327.0,
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"glsl",
+				"Set Syntax: OpenGL SL"
+			],
+			[
+				"ful",
+				"Build: Run sketch fullscreen"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"set gl",
+				"Set Syntax: OpenGL SL"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/StretchTexture/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Spout/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/EdgeFilter/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/TheCave/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/BlueFireball/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/StateOfTheArt/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/LavaLamp/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Catacombs/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/TheRoadToHell/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/SinColor/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/CubesAndSpheres/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Snow/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Flame/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Elevated/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Fireball/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Building/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Clouds/data/shader.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/Shaders/Fireball/data/fireball.glsl",
+		"/Developer/MyProjects/_git/Processing Experiments/2013/AnaglyphShader/data/optimised_anaglyph.glsl",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/thndl_tutorial/data/shader.frag",
+		"/Users/raphael/TEMP/redblue/src/megamu/redblue/RedBlue.java",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/Anaglyph/ShaderAnaglyphDeghost/data/basic_anaglyph.glsl",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/Anaglyph/ShaderAnaglyphDeghost/data/anaglyph_deghost.glsl",
+		"/Applications/Processing 2_0_8.app/Contents/Resources/Java/modes/java/examples/Topics/Shaders/Deform/data/deform.glsl",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/Anaglyph/ShaderAnaglyphDeghost/data/deform.glsl",
+		"/Users/raphael/Documents/Eclipse/PSMoveExtended/COPYING.txt",
+		"/Developer/MyProjects/_git/glsltutoP5/thndl_tutorial/data/colorfrag.glsl",
+		"/Developer/MyProjects/_git/glsltutoP5/thndl_tutorial/thndl_tutorial.pde",
+		"/Developer/Git/pshader-tutorials/intro/Ex_4_2_color/data/colorfrag.glsl",
+		"/Developer/Git/pshader-tutorials/intro/Ex_4_2_color/data/colorvert.glsl",
+		"/Developer/MyProjects/_git/glsltutoP5/thndl_tutorial/data/shader.frag",
+		"/Developer/Git/pshader-tutorials/intro/Ex_2_1_toon/data/vert.glsl",
+		"/Developer/Git/pshader-tutorials/intro/Ex_2_1_toon/data/frag.glsl",
+		"/Developer/Git/pshader-tutorials/intro/Ex_2_1_toon/Ex_2_1_toon.pde",
+		"/Developer/Git/processing-web/content/static/tutorials/pshader/index.html",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/pshader-tutorials-master/intro/Ex_10_2_sprites/data/spritevert.glsl",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/pshader-tutorials-master/intro/Ex_10_2_sprites/data/spritefrag.glsl",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/pshader-tutorials-master/intro/Ex_10_2_sprites/Ex_10_2_sprites.pde",
+		"/Users/raphael/Documents/ Programmation/Processing 2.0/Shaders/pshader-tutorials-master/intro/Ex_4_1_base/Ex_4_1_base.pde",
+		"/Users/raphael/TEMP/spiralP5-master/spiral_GL_a3/Spiral.pde",
+		"/Users/raphael/TEMP/spiralP5-master/spiral_GL_a3/spiral_GL_a3.pde",
+		"/Users/raphael/Documents/ Programmation/Processing collection/FFTPolarPlot/FFTPolarPlot.pde",
+		"/Users/raphael/Documents/ Programmation/Processing collection/fabric/fabric.pde",
+		"/Users/raphael/TEMP/sketch_130228b/sketch_130228b.pde"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"SDK",
+			"iChannel0",
+			"iMouse",
+			"iChann",
+			"myTime",
+			"resolution",
+			"time",
+			"Time",
+			"time",
+			"mouse",
+			"iGlobalTime",
+			"iMouse",
+			"iResolution",
+			"iMouse",
+			"iResolution",
+			"iGlobalTime",
+			"iMouse",
+			"iResolution",
+			"time",
+			"iResolution",
+			"iGlobalTime",
+			"iResolution",
+			"iGlobalTime",
+			"iResolution",
+			"leftEyeTexture",
+			"sample",
+			"image",
+			"annot",
+			"debu",
+			"__APPLE__",
+			"#ifdef __APPLE__",
+			" t ",
+			"t",
+			"time",
+			"display",
+			".0f"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			".0"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 259.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 181.0,
+	"status_bar_visible": true
+}
