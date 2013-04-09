@@ -15,13 +15,15 @@ void setup() {
 
 void draw() {
   // Set the shader uniforms
-  myShader.set("resolution", float(width), float(height)); 
-  myShader.set("time", millis() / 1000.0);
+
   
   // Be sure to draw only between beginDraw() and endDraw()
   scene.beginDraw();
-  scene.shader(myShader);
-  scene.rect(0,0,width,height);
+  shader(myShader);
+  myShader.set("resolution", float(width), float(height)); 
+  myShader.set("time", millis() / 1000.0);
+  rect(0,0,width,height);
+  resetShader();
   scene.endDraw();
   
   // Display the finished PGraphics

@@ -56,6 +56,7 @@ boolean isRefraction = true;
 void setup() {
   size(1024, 768, P2D);
   noStroke();
+  frameRate(60);
   
   ping = createGraphics(width, height, P2D);
   pong = createGraphics(width, height, P2D);
@@ -64,62 +65,77 @@ void setup() {
   
   scene = new PImage(width,height);
   
+  // Set ping and pong to black for the first pass
   ping.beginDraw();
   ping.background(0);
   ping.endDraw();
   
+  pong.beginDraw();
+  pong.background(0);
+  pong.endDraw();
+  
   rippleShader = loadShader("gpgpu_frag.glsl", "passThru_vert.glsl");
   refractionShader = loadShader("refraction_frag.glsl", "passThru_vert.glsl");
-
-  testShader = loadShader("test.glsl");
-  
-  image = loadImage("texture.jpg");
   
   pixelSize = new PVector(1.0/width, 1.0/height); // dimension of the pixel in [0,0]-[1,1]
+  rippleShader.set("pixel", pixelSize.x, pixelSize.y);
+  refractionShader.set("pixel", pixelSize.x, pixelSize.y);
+  
+  image = loadImage("texture.jpg");
+    
+  println("setup() finished ok");
 }
 
 void draw() {
   background(0,255,0);
   
-  rippleShader.set("pixel", pixelSize.x, pixelSize.y);
-  refractionShader.set("pixel", pixelSize.x, pixelSize.y);
-  
   // Animate
-  rippleShader.set("buffer", ping); // set previous result as data buffer
+  rippleShader.set("buffer", pong); // we want to write on the previous result
+  
+  int x = (int)random(width);
+  int y = (int)random(height);
   
   pong.beginDraw();
-  if(mousePressed) {
-    pong.fill(255,0,0);
-    pong.ellipse(mouseX,mouseY,32,32); // Draw a red circle
-  }
+  pong.noStroke();
+  pong.fill(255,0,0);
+  pong.ellipse(width*.5,height*.5,20,20);
+  pong.ellipse(x,y,10,10);
+  pong.noFill();
+  //println("drew random ellipse at x:"+x+" y:"+y);
   pong.shader(rippleShader);
   pong.rect(0, 0, width, height);
   pong.endDraw();
   
-  if(isRefraction) {
+  ping.beginDraw();
     // Refract
-    refractionShader.set("buffer", pong); // set previous result as data buffer
-    refractionShader.set("tex", image);   // set source image to refract
-    
-    ping.beginDraw();
-    ping.shader(refractionShader);
-    ping.rect(0, 0, width, height);
-    ping.endDraw();
-  }
-  else ping.copy(pong, 0, 0, width, height, 0, 0, width, height);
+  refractionShader.set("buffer", pong); // set current pong as refraction map
+  refractionShader.set("tex", image);   // set source image to refract
+  
+  ping.shader(refractionShader);
+  ping.rect(0, 0, width, height);
+  ping.endDraw();
+  
+  resetShader(); // Restore the default shaders
 
   // Copy to final scene texture
-  scene.copy(ping, 0, 0, width, height, 0, 0, width, height);
+  if(isRefraction) {
+    scene.copy(ping, 0, 0, width, height, 0, 0, width, height);
+  }
+  else {
+    scene.copy(pong, 0, 0, width, height, 0, 0, width, height);
+  }
     
   // Display result
-  image(ping, 0, 0, width, height);
-  //resetShader();
+  image(scene, 0, 0, width, height);
 }
 
 void keyReleased() {
   if(key == 'i') {
     isRefraction = !isRefraction; // toggle the refraction shader pass
-    println("isRefraction = "+isRefraction);
+    if(isRefraction)
+      println("Showing ping. isRefraction = "+isRefraction);
+    else
+      println("Showing pong. isRefraction = "+isRefraction);
   }
 }
 

@@ -31,6 +31,6 @@ void main( void )
 	gl_FragColor	= texture2D( tex, uv + vec2( x, y ) );
 
 	// DEBUG!!!! 
-	vec2 pos = gl_FragCoord.xy / resolution.xy;
-	gl_FragColor = vec4(pos,0.5+0.5*sin(time),1.0); // This should be displayed and is not...
+	//vec2 pos = gl_FragCoord.xy / resolution.xy;
+	//gl_FragColor = vec4(pos,0.5+0.5*sin(time),1.0); // This should be displayed and is not...
 }
