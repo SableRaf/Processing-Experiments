@@ -3,6 +3,8 @@
 // http://www.bantherewind.com/wrap-your-mind-around-your-gpu
 // Ported to Processing by Raphaël de Courville <twitter.com/sableRaph>
 
+// see also: http://www.comp.nus.edu/~ashwinna/docs/PingPong_FBO.pdf
+
 /*
 * Copyright (c) 2012, Ban the Rewind
 * All rights reserved.
@@ -90,32 +92,29 @@ void draw() {
   background(0,255,0);
   
   // Animate
-  rippleShader.set("buffer", pong); // we want to write on the previous result
   
   int x = (int)random(width);
   int y = (int)random(height);
   
   pong.beginDraw();
-  pong.noStroke();
-  pong.fill(255,0,0);
-  pong.ellipse(width*.5,height*.5,20,20);
-  pong.ellipse(x,y,10,10);
-  pong.noFill();
-  //println("drew random ellipse at x:"+x+" y:"+y);
-  pong.shader(rippleShader);
-  pong.rect(0, 0, width, height);
+  noStroke();
+  fill(255,0,0);
+  ellipse(width*.5,height*.5,20,20);
+  ellipse(x,y,10,10);
+  shader(rippleShader);
+  rippleShader.set("buffer", ping); // we want to write on the previous result
+  rect(0, 0, width, height); // Draw the shader result on this window-sized rectangle
+  resetShader(); // Restore the default shaders
   pong.endDraw();
   
   ping.beginDraw();
     // Refract
+  shader(refractionShader);
   refractionShader.set("buffer", pong); // set current pong as refraction map
   refractionShader.set("tex", image);   // set source image to refract
-  
-  ping.shader(refractionShader);
-  ping.rect(0, 0, width, height);
-  ping.endDraw();
-  
+  rect(0, 0, width, height);
   resetShader(); // Restore the default shaders
+  ping.endDraw();
 
   // Copy to final scene texture
   if(isRefraction) {
