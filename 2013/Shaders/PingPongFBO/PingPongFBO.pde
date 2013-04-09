@@ -114,14 +114,6 @@ void draw() {
   // Display result
   image(ping, 0, 0, width, height);
   //resetShader();
-
-  // Debug
-  testShader.set("resolution", float(width), float(height)); 
-  testShader.set("time", millis() / 1000.0);
-  testScene.background(0);
-  testScene.shader(testShader);
-  testScene.rect(0,0,width,height);
-  image(testScene, 0, 0, width, height);
 }
 
 void keyReleased() {
