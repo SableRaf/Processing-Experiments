@@ -14,6 +14,7 @@ void draw() {
   myShader.set("resolution", float(width), float(height)); 
   myShader.set("time", millis() / 1000.0);
   
+  // Be sure to call everything between beginDraw() and endDraw()
   scene.beginDraw();
   scene.background(0);
   scene.shader(myShader);
