@@ -10,10 +10,10 @@ varying vec4 vertColor;
 
 //----------------------
 
-varying vec2 uv;
+varying vec4 vertTexCoord;
 
 void main( void )
 {
-	uv			= gl_MultiTexCoord0.st;
+	vertTexCoord	= gl_MultiTexCoord0;
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 }

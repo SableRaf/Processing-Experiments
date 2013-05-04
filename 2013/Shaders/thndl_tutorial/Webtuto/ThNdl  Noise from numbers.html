@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<!-- saved from url=(0020)http://thndl.com/?14 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ThNdl: Noise from numbers</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+<link rel="apple-touch-icon" href="http://thndl.com/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="alternate" type="application/rss+xml" title="ThNdl via RSS" href="http://thndl.com/rss.p">
+<style>
+@font-face{font-family: 'Open Sans'; font-style: normal; font-weight: 400; src: local('Open Sans'), local('OpenSans'), url('os.ttf') format('truetype');}
+html{
+}
+body{
+background-color:#A0A090;
+/*background-image:url('gl.s?512:512:90::vec2 e=abs(mod(c.xy*vec2(1.,37.)+c.x+.3*noise(abs(mod(c.xy,2.)-1.)*100.),2.)-1.);float h=smoothstep(.25,.5,e.y)*smoothstep(.75,.5,e.y);f=vec4(vec3(.1,.1,.1)+.05*h,1.)');*/
+/*background-image:url('gl.s?512:512:90::float i,h;h=fract(c.x*c.x*c.y*c.y*1200000.);i=smoothstep(.25,.5,h)*smoothstep(.75,.5,h);f=vec4(.2+.1*sqrt(1.-length(c.xy))*(i))');
+*/
+background-image:url('gl.s?512:512:-1::vec2 r=1.0/(fract(10.*c.xy)*0.01+0.01);f=vec4(.05*fract(r.x*r.y*(abs(c.x)+1.)*(abs(c.y)+1.)))');
+color:#202020;
+font-family:'Open Sans',sans-serif;
+margin:2%;
+width:100%;
+height:100%;
+overflow:visble;
+opacity:0.0;
+-webkit-transition: opacity 1000ms ease-out;
+}
+#pagectr{
+position:absolute;
+top:0px;left:0px;
+/*width:100%;
+height:100%;
+overflow:scroll;
+-webkit-overflow-scrolling:touch;*/
+}
+/* * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}*/
+div#content{}
+div#header{margin:5px;float:left;
+}
+div.title{font-size:150%}
+div.article{margin:10px;font-size:100%;}
+div.break{width:300%;height:2px;background-color:#500000;}
+a:link{color:#307030;text-decoration:underline;}
+a:visited{color:#703030;text-decoration:underline;}
+a:hover{color:#707770;text-decoration:underline;}
+a:active{color:#707030;text-decoration:underline;}
+textarea{
+	margin:5px;
+	width:95%;
+	background-color:#A0A090;
+	color:white;
+	font-family: monospace;
+	border: 3px solid #cccccc;}
+img.cntr{display:block;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;}
+div.date{font-size:75%;color:#202020;margin-bottom:5px;}
+div#footer{font-size:50%;color:#202020;width:300px;margin:5px;}
+div#nocontent{width:50%;}
+div.quote{font-size:75%;margin:20px;}
+.tweet{margin:2px;font-size:75%;color:black;border-style:solid;background-color:#808070;border-color:#808070;border-radius:3px;border-width:3px;}
+a.tweet{color:black;}
+div#page {
+	min-width:100%;
+	-webkit-transform: translateZ(0px);
+}
+</style>
+<script>
+var articles;
+var current=0;
+var ready=0;
+var body;
+var content;
+var cw=400;
+var ch=100;
+var compat=0;
+function gid(id) { return document.getElementById(id); } 
+function getStyle(cn){
+	var ss,cl;
+	ss=document.styleSheets[0];cl=ss.rules||ss.cssRules;
+	for(var x=0;x<cl.length;x++){
+		var clx;
+		clx=cl[x];
+		//console.log(clx.selectorText);
+		if(clx.selectorText){if(clx.selectorText.toLowerCase()==cn){return clx.style}}}}
+function art(){
+	var articledom,title,text,update,nn,np;
+	if(!articles)return;
+	if(!body)return;
+	current=articles.length;
+	//console.log("current=",current);
+	var topart=1;
+	for(key in articles){
+		articledom = document.createElement('div');
+		articledom.className = 'article';
+		title=articles[key][1];
+		lastmod=articles[key][2];
+		text=articles[key][3];
+		update="<div class=\"title\"><a onclick=\"totarget("+articles[key][0]+");return false;\" href=\"?"+articles[key][0]+"\">"+title+"</a></div><div class=\"date\">Last updated: "+lastmod+"</div><div id=\"artxt"+articles[key][0]+"\" "+(topart?"":"style='display:none;'")+" class=\"text\">";
+		topart=1;
+		var tweeturl =encodeURI( "https://twitter.com/intent/tweet?original_referer=http://thndl.com/?"+articles[key][0]+"&text=ThNdl: "+articles[key][1]+"&url=http://thndl.com/?"+articles[key][0]+"&via=baldand");
+
+		update+="<a class=\"tweet\" href=\""+tweeturl+"\">Tweet</a>";
+		update+="<a class=\"tweet\" href=\"https://plus.google.com/share?url=http://thndl.com/?"+articles[key][0]+"\">Google+</a>";
+	
+		//for(pkey in content){
+		//	update+="<p>"+content[pkey]+"</p>"; }
+		//update+="</div>";
+		update+=text;//+"<textarea rows=3 class=\"commenteditor\"></textarea></div>";
+		articledom.innerHTML=update;
+		articledom.id = articles[key][0];
+		content.appendChild(articledom);
+		content.innerHTML+="<div class=\"break\"></div>"}
+		/*setTimeout(window.onhashchange,16);*/}
+function rsz(){
+	var da,db,cols=0,h=0,w=0,cc,mw;
+	compat=1;
+	db=getStyle('div.break');
+	da=getStyle('div.article');
+	da.width="75%";/*da.padding="5px 25%";*/
+	da.fontSize="100%";
+	h=window.innerHeight-40;w=window.innerWidth;
+	if(h<400){da.fontSize="80%";}
+	if(h<275)h=275;
+	if(w){if(w>1000){w/=3;w-=10;w*=2}else if(w<450){w*=2;w-=10;}cw=w/2+7;}
+	ch=h;
+	cc=['webkitColumnCount','MozColumnCount','columnCount'];
+	if(h){
+		for(k in cc){if(cc[k] in da){da[cc[k]]=2;cols=1}}
+		if(cols){compat=0;da.height=""+(h)+"px";da.width=""+(w)+"px";da.padding="";}
+	var as=document.getElementsByClassName('article');
+	mw=0;
+	for(var i=0;i<as.length;i++){
+		mw=as[i].scrollWidth>mw?as[i].scrollWidth:mw;
+		if(!as[i])continue;
+		mw=as[i].childNodes[2].scrollWidth>mw?as[i].childNodes[2].scrollWidth:mw;
+		if((as[i].childNodes[2].offsetHeight<h)&&(1/*as[i].childNodes[2].style.display!='none'*/)){
+			as[i].style.height=""+(as[i].childNodes[2].offsetHeight+80)+"px";}}
+	if (mw>0){db.width=""+(mw+20)+"px";}}jumpto(current);/*window.onhashchange();*/}
+function d(dat){
+	articles=dat;
+	//console.log("Articles:",articles.length);
+	art();setTimeout(rsz,500);}
+function ndlinit(){
+	var nocontent=gid('nocontent');
+	nocontent.style.display="none";
+        content=gid('content');
+	body=document.getElementsByTagName('body')[0];
+	rsz();art();
+	//Compatibility with old # links.
+	if(window.location.hash.length>0)totarget(window.location.hash.slice(1));
+	if(location.search.length>0){
+		var target=parseInt(location.search.slice(1));
+		if (!isNaN(target)) totarget(target);}
+	body.style.opacity=1.0;
+}
+var stx,sty,exx=-1000,exy=-1000;
+function snapto(x,y){
+	stx=Math.round(x);sty=Math.round(y);
+	//console.log("Snapping to:",stx,sty);
+	exx=window.pageXOffset;
+	exy=window.pageYOffset;
+	snap();
+}
+function delayscroll(){
+	window.scrollTo(exx,exy);
+}
+function snap(){
+	var xd,yd;
+	if(compat)return 0;
+	//console.log(exx,exy,window.pageXOffset,window.pageYOffset,stx,sty);
+	if(Math.abs(exx-window.pageXOffset)>0 || Math.abs(exy-window.pageYOffset)>0){return 0;}
+	xd=window.pageXOffset-stx;
+	yd=window.pageYOffset-sty;
+	if(xd==0&&yd==0)return 0;
+	xd/=1.;
+	yd/=1.;
+	if(xd>0&&xd<1)xd=1;
+	if(xd<0&&xd>-1)xd=-1;
+	if(yd>0&&yd<1)yd=1;
+	if(yd<0&&yd>-1)yd=-1;
+	exx=window.pageXOffset-xd;exy=window.pageYOffset-yd;
+	setTimeout(delayscroll,16);
+	return 1;
+}
+var snto;
+function chksnap(){
+	var arts,xd,yd;
+	arts=document.getElementsByClassName('article');
+	for (k in arts){
+		var x=0;
+		while (x<window.pageXOffset+cw){
+			xd=Math.abs(arts[k].offsetLeft-5+x-window.pageXOffset);
+			yd=Math.abs(arts[k].offsetTop-5-window.pageYOffset);
+			if (xd<200 && yd<200){snapto(arts[k].offsetLeft-5+x,arts[k].offsetTop-5);break;}x+=cw;}}	
+}
+function jumpto(target){
+	if(target.length==0)return;
+	var asint=parseInt(target);
+	if(isNaN(asint))return;
+	if(asint<0)return;
+	if(asint>=articles.length)return;
+	current=asint;
+	var title,artit
+	artit=articles[articles.length-1-asint][1];
+	document.title="ThNdl: "+artit;
+        var trg=document.getElementById(target);
+        if(trg){window.scrollTo(trg.offsetLeft-10,trg.offsetTop-10);}}
+window.onscroll=function(event){
+	//if(snap())return;
+	//if(snto)clearTimeout(snto);
+	//snto=setTimeout(chksnap,500);
+	//console.log(window,window.scrollY,window.scrollX);
+}
+document.onresize=function(event){rsz();}
+window.onresize=function(event){rsz();}
+document.onkeydown=function(event){
+	//var ctr=gid('pagectr');
+	var cont=gid('content');
+	//console.log(event.keyCode,cw,current);
+	if(!event.keyCode)return;//IE!
+	if(event.keyCode==39){/*Right*/
+               if(window.pageXOffset<cont.offsetLeft){window.scrollBy(cont.offsetLeft-pageXOffset,0);}
+               else{if((window.pageXOffset+cw)<(document.documentElement.scrollWidth-document.documentElement.clientWidth)){window.scrollBy(cw+1,0);}}}
+	else if (event.keyCode==37)/*Left*/ window.scrollBy(-(cw+1),0);
+		//if(ctr.scrollLeft<cont.offsetLeft){ctr.scrollLeft+=cont.offsetLeft-pageXOffset;}
+        	//else{if((ctr.scrollLeft+cw)<(ctr.scrollWidth-document.documentElement.scrollWidth)){ctr.scrollLeft+=cw+1;}}}
+	//else if (event.keyCode==37)/*Left*/ ctr.scrollLeft+= -(cw+1);
+	else if (event.keyCode==38){current=(current+1)>=articles.length?current:(current+1);totarget(current);}/* window.scrollBy(0,-ch);*/
+	else if (event.keyCode==40){current=(current-1)<0?0:(current-1);totarget(current);}/* window.scrollBy(0,ch);*/
+	else return true;
+	event.preventDefault();
+	return false;}
+/*window.onhashchange=function(event){
+	//console.log(window.location.hash);
+        var article=window.location.hash.slice(1);
+	jumpto(article);
+}*/
+function updateshader(elid,val){
+	var el=gid(elid);
+	if (el&&val){el.src="gl.s?256:256:-1::"+val;}
+}
+function totarget(target) {
+	jumpto(target);
+	history.pushState(null,null,"?"+target);
+}	
+
+</script>
+<script type="text/javascript" src="./ThNdl  Noise from numbers_files/a.p"></script>
+
+</head>
+<body onload="setTimeout(ndlinit,0)" style="opacity: 1;"> 
+<!--<div id="pagectr">
+<div id="page">-->
+<div id="header">
+<img src="./ThNdl  Noise from numbers_files/gl.s" style="width:64px;height:64px;float:left;margin:5px">
+<div style="font-size:250%;float:left;margin:5px;">ThNdl</div>
+<div style="font-size:100%;color:#303030;float:left;margin:5px;">
+dvics, pxls, prfrmnc, usr xprinc, 44.4% optimizd.<br>
+All ©2012 Andrew Baldwin (<a href="http://en.twitter.com/baldand">Twitter</a>,<a href="https://plus.google.com/106513554551905846581">Google+</a>), nokian with own opinions. <br><a style="font-size:75%;" href="http://thndl.com/rss.p">Full content RSS</a>
+</div>
+</div>
+<div style="float:left;">
+<div class="break"></div>
+<div id="content">
+<div id="nocontent" style="display: none;"><p>No Javascript? Try the <a href="http://thndl.com/rss.p">full content RSS feed</a>
+</p></div>
+<div class="article" id="16"><div class="title"><a onclick="totarget(16);return false;" href="http://thndl.com/?16">Shader recap</a></div><div class="date">Last updated: Thu, 29 Nov 2012 21:30:00 GMT
+
+</div><div id="artxt16" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?16&text=ThNdl:%20Shader%20recap&url=http://thndl.com/?16&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?16">Google+</a>
+<p>So far I've posted 9 articles here covering different techniques for making OpenGL shaders.
+
+</p><p>For those of you that have been following and trying things out, I thought this might be a good place for a recap.
+
+</p><p>I introduced the different built-in functions of GLSL as we needed them to achieve different goals, but at some point you might have been wishing for a compact reference to <i>all</i> the available functions. 
+
+</p><p>The one I use very often is the Khronos Group's 4 page PDF format <a href="http://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf">"OpenGL ES 2.0 Quick Reference Card"</a>. Page 3 and 4 cover GLSL including all the built-in functions.
+
+</p><p>There is also an online <a href="http://www.khronos.org/opengles/sdk/docs/manglsl/">OpenGL ES Shading Language reference page</a>, which covers also the latest version 3.0 (most devices and WebGL still use the 1.0 version).
+
+</p><p>Now you have those under your belt, here is a list of all the functions we've used so far.
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<div>
+<div style="margin:5px;float:right;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?0">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(1).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?0"><code>f = vec4(c.x, c.y, 0.0, 1.0);</code></a></p></div>
+<p><b>Function:</b> <code>vec2(float,float), vec3(float,float,float), vec4(float,float,float,float)</code>
+</p><p></p><p><b>Description:</b> Vectors are groups of numbers. </p><p>These constructor functions are used to create them - pass single numbers or vectors as parameters. </p><p>For example, <code>vec4(colour.rgb,1.)</code> creates a new vec4 using the first 3 elements of the vector colour and the number 1.0 as the fourth element.</p><p>Single or multiple elements can be referred to using dot notation using rgba, xyzw or stuv. </p><p>For example <code>v.xy</code> would return a vec2 containing the x and y elements of vector v (which could be a vec2, vec3 or vec4).
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p><div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?1">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(3).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?1"><code>float d = length(c.xy);
+<br>f = vec4(d, d, d, 1.0);</code>
+</a></p></div>
+<p><b>Function:</b> <code>length(vec)</code>
+</p><p></p><p><b>Description:</b> Returns the length of the given vector. </p><p>The length of 2 dimensional vec2 v would be equivalent to <code>sqrt(v.x*v.x+v.y*v.y)</code>. </p><p>Can be used to create a distance field for drawing circles and related shapes.
+</p><p>See <a href="http://thndl.com/?1">The Pixel Swarm</a>
+</p><p>
+
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?2">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(4).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?2"><code>
+float d = step(0.1, 1.0-length(c.xy)); 
+<br>f = vec4(0.0, 1.0, 0.0, d);</code>
+</a></p></div>
+<p><b>Function:</b> <code>step(threshold,value)</code>
+</p><p></p><p><b>Description:</b> Returns 0.0 if value is less than threshold, otherwise returns 1.0. 
+</p><p>Used to break a continuous field into two distinct regions. 
+
+</p><p>For example, it can be applied to a distance field calculated using <code>length</code> to create a circle.
+
+</p><p>See <a href="http://thndl.com/?1">The Pixel Swarm</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?3">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(5).s">
+
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?3"><code>float d = smoothstep(0.08,0.1,1.-length(c.xy));
+<br>f = vec4(0.0, 1.0, 0.0, d)</code>
+</a></p></div>
+<p><b>Function:</b> <code>smoothstep(lower,upper,value)</code>
+</p><p></p><p><b>Description:</b> Returns 0.0 if value is less than lower, 1.0 if value is above upper, and smoothly interpolates the range between.
+
+</p><p>Interpolation is not straight/linear. It uses a function like <code>f = f * f * (3.0 - 2.0 * f)</code>
+ 
+</p><p>Used to break a continuous field into two distinct regions with a smooth transition. 
+
+</p><p>For example, it can be applied to a distance field calculated using <code>length</code> to create a circle with smooth or blurred edges.
+
+</p><p>The greater the gap between lower and upper, the wider the transition region.
+
+</p><p>See <a href="http://thndl.com/?1">The Pixel Swarm</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?9">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(6).s">
+<code>
+</code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?9"><code>vec2 r=abs(c.xy);
+<br>f=vec4(r,0.,1.)
+</code>
+</a></p></div>
+<p><b>Function:</b> <code>abs(value)</code>
+</p><p></p><p><b>Description:</b> Returns the value unchanged if value is greater than zero, or -value if value is less than zero.
+
+</p><p>The effect is to make continuous values/fields reflect around zero. 
+
+</p><p>Can be used in combination with mod or fract to help make continuous repeating functions.
+
+</p><p>See <a href="http://thndl.com/?5">Square shaped shaders</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?10">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(7).s">
+<code>
+</code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?10"><code>vec2 r=abs(c.xy);<br>float s=max(r.x,r.y);
+<br>f=vec4(vec3(s),1.)</code>
+</a></p></div>
+<p><b>Function:</b> <code>max(first,second)</code>
+</p><p></p><p><b>Description:</b> Returns first if first is larger than second, else returns second.
+
+</p><p>Useful for creating squares (or cubes in 3D).
+
+</p><p>See <a href="http://thndl.com/?5">Square shaped shaders</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?17">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(8).s">
+<code>
+</code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?17"><code>int N=7;
+<br>float a=atan(c.x,c.y)+.2;
+<br>float b=6.28319/float(N);
+<br>f=vec4(vec3( smoothstep(.5,.51, cos(floor(.5+a/b)*b-a)*length(c.xy))),1.);
+</code>
+</a></p></div>
+<p><b>Function:</b> <code>atan(x,y)</code>
+</p><p></p><p><b>Description:</b> Returns the angle, in radians, between +pi and -pi, formed by the right-angled triangle with width x and height y.
+
+</p><p>Combined with length, it converts cartesian coordinates to polar coordinates.
+
+</p><p>Can be used for partioning space into regions based on their angle around a centre point.
+
+</p><p>See <a href="http://thndl.com/?5">Square shaped shader</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?78">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(9).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?78"><code>
+vec2 r=(456.789* sin(789.123*c.xy));
+<br>f=vec4(fract( r.x*r.y*(1.+c.x)))
+</code>
+</a></p></div>
+<p><b>Function:</b> <code>sin(value),cos(value),tan(value)</code>
+</p><p></p><p><b>Description:</b> sin and cos are continuous smooth functions in the range -1 to +1 which repeat over a period of 2*Pi. tan (equal to sin divided by cos) also repeats but is not continuous - or limited in range.
+
+</p><p>These functions are very useful for creating smooth variation, or with high frequencies, pseudo-random aliasing noise.
+
+</p><p>Depending on your platform, they can be quite expensive to calculate.
+
+</p><p>See <a href="./ThNdl  Noise from numbers_files/ThNdl  Noise from numbers.html">Noise from numbers</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?59">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(10).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?59"><code>
+vec2 s=floor(3.*(c.xy*.5+.5))/2.;
+<br>f=vec4(s.x,s.y,0.,1.)</code>
+</a></p></div>
+<p><b>Function:</b> <code>floor(value)</code>
+</p><p></p><p><b>Description:</b> Returns the integer part of value, discarding the fractional part.
+
+</p><p>Used for partitioning continuous functions into regions sharing a common constant value which can be used to give all pixels in that region similar behaviour.
+
+</p><p>Combined with fract to split a value into two parts, it can be used for interpolating between regions.
+
+</p><p>See <a href="http://thndl.com/?11">Continuously Discrete</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?24">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(11).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?24"><code>vec2 m=mod(c.xy+c.x+c.y,2.)-1.;<br>f=vec4(length(m))</code>
+</a></p></div>
+<p><b>Function:</b> <code>mod(value, period)</code>
+</p><p></p><p><b>Description:</b> Returns the remainder of value divided by period. 
+
+</p><p>Mod can be used to create a repeating function from a continuous function.
+
+</p><p>fract can be a cheaper alternative.
+
+</p><p>See <a href="http://thndl.com/?7">The Art of Repepetition</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?49">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(12).s">
+<code><br><br>vec3 sky=mix( vec3(.0,.0,.5), vec3(.0,.5,1.), c.y*.5+.5);
+<br>float circle=smoothstep(.25, .3,1.-length(c.xy));
+<br>float shadow=smoothstep(.25, .3,1.-length(c.xy+vec2(.5,0.)));
+<br>f=vec4(mix( sky, vec3(.6), mix(circle,0.,shadow)),1.);</code>
+</a></div>
+<p><b>Function:</b> <code>mix(first,second,value)</code>
+</p><p></p><p><b>Description:</b> Returns first if value is 0 or less. Returns second if value is 1 or more. Between 0 and 1, returns a linear interpolated blend of first and second.
+
+</p><p>Mix is used for combining multiple overlapping regions. It can be used to select colours or shapes. Chaining mix results can create complex scenes without needing any conditional statements.
+
+</p><p>See <a href="http://thndl.com/?9">Mixing it up a bit</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?52">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(13).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?52"><code>float s=1.-length(c.xy*c.xy*c.xy*c.xy);
+<br>f=vec4(1.,.8,.6,smoothstep(0.,0.1,s));
+</code>
+</a></p></div>
+<p><b>Function:</b> <code>pow(value,raise)</code>
+</p><p></p><p><b>Description:</b> Returns value raised to the power raise. Raise can be integers - 2.0 would return value*value - or floats - 0.5 would return sqrt(value).
+
+</p><p>Useful for making squircles.
+
+</p><p>Can be an expensive function.
+
+</p><p>See <a href="http://thndl.com/?10">Going round in squircles</a>
+</p><p>
+
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?98">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(14).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?98"><code>
+vec2 d=abs(fract(c.xy)*2.-1.);
+<br>f=vec4(d.x*d.y)
+</code>
+</a></p></div>
+<p><b>Function:</b> <code>fract(value)</code>
+</p><p></p><p><b>Description:</b> Returns the fractional part of value. 
+</p><p>Paired with floor, it breaks numbers into two parts - integer and fractional.
+
+</p><p>Paired with abs, it can create a repeating triangle wave which oscillates linearly between 0 and 1 - sometimes a cheaper alternative to sin.
+
+</p><p>Very useful for creating aliasing noise.
+
+</p><p>See <a href="http://thndl.com/?15">More noise</a>
+</p><p>
+<img width="256" height="32" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(2).s">
+
+</p></div>
+<div>
+<div style="float:right;margin:5px;width:128px;">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?97">
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(15).s">
+<code></code></a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?97"><code>vec2 d = clamp(abs(c.xy),0.2,0.8);
+<br>f = vec4(d.x*d.y);</code>
+</a></p></div>
+<p><b>Function:</b> <code>clamp(value,min,max)</code>
+</p><p></p><p><b>Description:</b> If value is less than min, returns min. If value is more than max, returns max. Otherwise returns value. Effects is to limit value to the range min-max.
+
+</p><p>Sometimes the output of one function can exceed the useful input range of another. clamp can constrain the range in this case.
+
+</p><p>One example is when doing calculations with colours. Display will naturally clamp to the range 0-1, but intermediate calculations using higher or lower values can lead to incorrect results which explicit clamping can correct.
+
+</p></div>
+</div>
+
+</div></div><div class="break"></div><div class="article" id="15"><div class="title"><a onclick="totarget(15);return false;" href="http://thndl.com/?15">More noise</a></div><div class="date">Last updated: Fri, 23 Nov 2012 09:42:00 GMT
+
+</div><div id="artxt15" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?15&text=ThNdl:%20More%20noise&url=http://thndl.com/?15&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?15">Google+</a>
+<p>Now we <a href="./ThNdl  Noise from numbers_files/ThNdl  Noise from numbers.html">have a function</a> which can give us a random-ish looking number between 0-1 for every pixel we render with a shader.
+
+</p><p>By using <code>floor</code> as we did earlier with <a href="http://thndl.com/?11">continuous numbers</a>, we can now have a random number for each different region of the image.
+
+</p><p>
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?83">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(16).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?83"><code>
+float rand(vec2 p) {
+<br>  p+=.2127+p.x*.3713*p.y;
+<br>  vec2 r=4.789*sin(489.123*(p));
+<br>  return fract(r.x*r.y);
+<br>}
+<br>f=vec4(rand(floor(vec2(4.,2.)*c.xy)))</code>
+</a></p></div>
+
+<p>We've put our random number code into a reusable function called rand(), with a couple of improvements compared to the original version. 
+
+</p><p>First we skew the coordinates to avoid obvious symmetry - that also helps give us less aliasing patterns. That then allows the multiplier to be reduced to give us more precision when zooming out.
+
+</p><p>By scaling our coordinates and applying floor before calling the rand function, we can control how many regions we want.
+
+</p><p>Putting together many techniques from earlier articles gives us, as an example, 32 random hued squircles.
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?89">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(17).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?89"><code>
+float rand(vec2 p) {
+<br>  p+=.2127+p.x*.3713*p.y;
+<br>  vec2 r=4.789*sin(489.123*(p));
+<br>  return fract(r.x*r.y);
+<br>}
+<br>vec3 h2r(vec3 hsv) {
+<br>  vec3 t=clamp(abs(mod(hsv.r*6.+ vec3(0.,2.,4.),6.)-3.)-1.,0.,1.);
+<br>  return hsv.b*hsv.g*t+hsv.b-hsv.b*hsv.r;
+<br>}
+<br>vec2 p=c.xy*vec2(4.,2.);
+<br>float s=smoothstep(.1,.2,1.-length(pow(2.*fract(p)-1.,vec2(2.))));
+<br>vec3 t=h2r(vec3(rand(floor(p)),.75,.6));
+<br>f=vec4(t,s)</code>
+</a></p></div>
+
+<p>Ok, so that's one basic use for randomness to raise the interest level of shaders.
+
+</p><p>The next thing we need to make is, a little perversely, smoothed noise.
+
+</p><p>You see, the problem with the noise we've made so far is that it's "white noise" with about the same amount of power at all frequencies.
+
+</p><p>By smoothing - filtering - it, we can create a different spectrum of noise. The simplest way to do this is to use the floor to calculate the 4 random values around each point, and then blend those values based on how far the point is from each one.
+
+</p><p>Something like this:
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?85">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(18).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?85"><code>
+float rand(vec2 p) {
+<br>  p+=.2127+p.x*.3713*p.y;
+<br>  vec2 r=4.789*sin(489.123*(p));
+<br>  return fract(r.x*r.y);
+<br>}
+<br>float sn(vec2 p){
+<br>  vec2 i=floor(p-.5);
+<br>  vec2 f=fract(p-.5);
+<br>  float rt=mix(rand(i),rand(i+vec2(1.,0.)),f.x);
+<br>  float rb=mix(rand(i+vec2(0.,1.)),rand(i+vec2(1.,1.)),f.x);
+<br>  return mix(rt,rb,f.y);
+<br>}
+<br>f=vec4(vec3(sn(vec2(4.,2.)*c.xy)),1.)"&gt;
+</code></a></p></div>
+
+<p>That was blending with 3 normal mix statements - bilinear smoothing. It would look much better with one line added to modify the fract and make a non-linear blend.
+
+</p><p>The equivalent of a smoothstep would be <code>f=f*f*(3.0-2.0*f)</code>. But an even better alternative (which is smooth also at higher derivatives) comes via <a href="http://www.iquilezles.org/www/articles/texture/texture.htm">Inigo Quilez</a>: <code>f = f*f*f*(f*(f*6.0-15.0)+10.0)</code> 
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?86">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(19).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?86"><code>
+float rand(vec2 p) {
+<br>  p+=.2127+p.x*.3713*p.y;
+<br>  vec2 r=4.789*sin(489.123*(p));
+<br>  return fract(r.x*r.y);
+<br>}
+<br>float sn(vec2 p){
+<br>  vec2 i=floor(p-.5);
+<br>  vec2 f=fract(p-.5);
+<br>  f = f*f*f*(f*(f*6.0-15.0)+10.0);
+<br>  float rt=mix(rand(i),rand(i+vec2(1.,0.)),f.x);
+<br>  float rb=mix(rand(i+vec2(0.,1.)),rand(i+vec2(1.,1.)),f.x);
+<br>  return mix(rt,rb,f.y);
+<br>}
+<br>f=vec4(vec3(sn(vec2(4.,2.)*c.xy)),1.)"&gt;
+</code></a></p></div>
+
+<p>Finally, we can create a controlled spectrum of noise by using this function to generate smooth noise at different frequency octaves.
+
+</p><p>For example, we can double the frequency each time, and then add them all together with different strengths. The most common approach is to halve the strength of each octave higher. Like this:
+
+</p><div style="font-size:80%;line-height:1;padding:10px;background-color:#E0E0E0;border-radius:10px">
+<a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?87">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(20).s">
+</a><p><a style="text-decoration:none;color:black;" href="http://thndl.com/gl/?87"><code>
+float rand(vec2 p) {
+<br>  p+=.2127+p.x*.3713*p.y;
+<br>  vec2 r=4.789*sin(489.123*(p));
+<br>  return fract(r.x*r.y);
+<br>}
+<br>float sn(vec2 p){
+<br>  vec2 i=floor(p-.5);
+<br>  vec2 f=fract(p-.5);
+<br>  f = f*f*f*(f*(f*6.0-15.0)+10.0);
+<br>  float rt=mix(rand(i),rand(i+vec2(1.,0.)),f.x);
+<br>  float rb=mix(rand(i+vec2(0.,1.)),rand(i+vec2(1.,1.)),f.x);
+<br>  return mix(rt,rb,f.y);
+<br>}
+<br>vec2 p=c.xy*vec2(4.,2.);
+<br>f=vec4(vec3(
+<br>.5*sn(p)
+<br>+.25*sn(2.*p)
+<br>+.125*sn(4.*p)
+<br>+.0625*sn(8.*p)
+<br>+.03125*sn(16.*p)+
+<br>.015*sn(32.*p)),1.)
+</code></a></p></div>
+
+<p>This kind of cloudy pattern is usually called <b>Fractional Brownian Motion (FBM)</b>. As you can see, it's very expensive to calculate - in our case needing no less than 48 <code>sin()</code> calls for each pixel - <b>ouch!</b>
+
+</p><p>But it makes an incredibly useful and reusable building block for modulating and colouring other simpler functions to give shader images a more natural or organic feeling.
+
+</p><p>Here's one example to end with, an instant world map.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?88">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(21).s"></a>
+
+</p></div></div><div class="break"></div><div class="article" id="14"><div class="title"><a onclick="totarget(14);return false;" href="./ThNdl  Noise from numbers_files/ThNdl  Noise from numbers.html">Noise from numbers</a></div><div class="date">Last updated: Thu, 22 Nov 2012 00:00:00 GMT
+
+</div><div id="artxt14" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?14&text=ThNdl:%20Noise%20from%20numbers&url=http://thndl.com/?14&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?14">Google+</a>
+<p>
+<a href="http://thndl.com/gl/?79">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(22).s">
+</a>
+
+</p><p>Sometimes, a little noise is all you need to go from synthetic to organic.
+
+</p><p>The world is unpredictable, and that makes it interesting.
+
+</p><p>The same rules applies to shaders - unpredictable output makes for more interesting and natural-looking results. So how do you make a shader output unpredictable results?
+
+</p><p>An easy way is to feed it random numbers for every pixel in an image texture and use those in each calculation. But let's rule out that approach for now. 
+
+</p><p style="font-size:75%;">(It's anyway not always appropriate for complex shaders because a shader may end up doing many texture lookups from different parts of memory, and that can become a performance bottleneck).
+
+</p><p>Let's say you want the shader to generate unpredicatble output given smooth simple predicable input (and no textures).
+
+</p><p>To start with, there is no random number generator in GLSL. So you can't just call some built-in function like <code>random()</code> like you might on a CPU.
+
+</p><p>You need to provide your own function for this, one that takes any number as a parameter, mixes it up a bit, and returns another number in a known range (like between 0 and 1). 
+
+</p><p>The output numbers for two close inputs should be very different so that when we show the output, we cannot see obvious patterns.
+
+</p><p>Unfortunately normal GLSL is also missing bit-level operations like shift and exclusive-or that would otherwise be very useful for making this kind of function.
+
+</p><p>Instead we need to make use of something that in other situations is annoying, but in this case will be useful - aliasing.
+
+</p><p>Aliasing is what happens when you sample a function at lower than double the frequency of the highest frequency component it contains. If you do that without filtering out the high frequencies first, they "reflect" and interfere with the rest of the signal.
+
+</p><p>When it happens with sound the result is often a ringing echo or sharpness. With images (say when you draw an image at half size using a "nearest neighbour" algorithm) it shows as sharp and pixellated edges or shimmering animation.
+
+</p><p>But today, for this problem, aliasing is going to be our friend by helping us to make some noise.
+
+</p><p>We need to start with a repeating function, like sin.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?72">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(23).s">
+float r=.5+.5*sin(10.*c.x);
+f=vec4(r)
+</a>
+
+</p><p>
+</p><p>To get aliasing, and potentially noise, we need to increase the frequency.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?73">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(24).s">
+float r=.5+.5*sin(789.123*c.x);
+f=vec4(r)
+</a>
+
+</p><p>Hmm.. that didn't work. It is aliasing, but it's still giving us a regular pattern.
+
+</p><p>What we need is to combine it with another function - fract, which returns just the fractional part of a number, and as a side benefit will automatically give us a result in the range 0-1. This is essentially another repeating function which will show aliasing.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?74">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(25).s">
+float r=fract(sin(789.123*c.x));
+f=vec4(r)
+</a>
+
+</p><p>Some signs of noise, but we're not there yet. We need to increase again the frequency of output of the fract, by increasing the amplitude of the sin.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?75">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(26).s">
+float r=fract(456.789*sin(789.123*c.x));
+f=vec4(r)
+</a>
+
+</p><p>Finally, some noise! Though it's only in 1-dimension. We need to try and turn this into 2D TV-static somehow.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?76">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(27).s">
+vec2 r=fract(456.789*sin(789.123*c.xy));
+f=vec4(r.x*r.y)
+</a>
+
+</p><p>Now we calculated the initial noise values based on both x and y coordinates. Then we combined the results by multiplying. But that wasn't very effective as the result has a clear pattern. Perhaps our fract is in the wrong place now?
+
+</p><p>
+
+<a href="http://thndl.com/gl/?77">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(28).s">
+vec2 r=(456.789*sin(789.123*c.xy));
+f=vec4(fract(r.x*r.y))
+</a>
+
+</p><p>That's more like it. Now we have mostly the noise we were after, though there are still some hiddern patterns which brains do an amazing job at spotting. One cheap extra term should fix that.
+
+</p><p>
+
+<a href="http://thndl.com/gl/?78">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(29).s">
+vec2 r=(456.789*sin(789.123*c.xy));
+f=vec4(fract(r.x*r.y*(1.+c.x)))
+</a>
+
+</p><p>There, the patterns seem to have gone now. The final instruction tally per pixel with this approach is 2 sin, 1 fract, 6 multiplies and 1 add. That's not horrifyingly expensive, but sin can be a little painful.
+
+</p><p>Before this noise becomes useful for making images, we'll need to do some more work with it. But that's going to be the subject of another article.
+
+
+</p></div></div><div class="break"></div><div class="article" id="13"><div class="title"><a onclick="totarget(13);return false;" href="http://thndl.com/?13">Travelling in parallax </a></div><div class="date">Last updated: Thu, 15 Nov 2012 00:00:00 GMT
+
+</div><div id="artxt13" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?13&text=ThNdl:%20Travelling%20in%20parallax%20&url=http://thndl.com/?13&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?13">Google+</a>
+<p>This won't be a long one. It's really just an excuse to show you some new background scenery.
+
+</p><p>(If you're reading the RSS, why not stop by the web site now to see what I'm talking about?)
+
+</p><p>Unfortunately it will probably be quite boring (disabled) on Firefox due to trouble with image upscaling, but if you are using Chrome or Safari (webkit browser), especially an iPad, it might be quite pretty. 
+
+</p><p>So have a look round, read some of the older articles with a new perspective. Or go and explore the far right side of the blog.
+
+</p><p>In case you are curious, the parallax effect is mostly done with CSS 3d transforms and transitions applying perspective to a stack of semi-transparent PNG files, generated server-side using shaders.
+
+</p><p>The CSS3 feature <code>-transform-style: preserve-3d;</code> is the main trick to make the browser give depth to a scene as it pans around. With that applied to a parent item, and each image in the stack given a different Z depth from the screen using a translate, then the browser moves them at different rates.
+
+</p><p>Unfortunately it can't be applied to any scrolling item because on webkit, overflow:scroll is not compatible with the preserve-3d option. So the 3d scene is put into a parallel tree behind the articles and repositioned using javascript triggering a CSS transition. That's not ideal, especially on iOS where scroll events do not come in regularly after a flick. So the parallax can't track the panning rigidly.
+
+</p><p>Still, not a bad effect.
+
+</p><p>EDIT:22/11/2012. The parallax effect lasted a week before I changed to a new and slightly more conservative style for the blog.
+</p></div></div><div class="break"></div><div class="article" id="12"><div class="title"><a onclick="totarget(12);return false;" href="http://thndl.com/?12">Native means nothing </a></div><div class="date">Last updated: Wed, 07 Nov 2012 11:30:00 GMT
+
+</div><div id="artxt12" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?12&text=ThNdl:%20Native%20means%20nothing%20&url=http://thndl.com/?12&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?12">Google+</a>
+<p style="font-size:75%;">For a change, this article is not about shaders. But the illustrations are all shaders you can click on and edit.</p>
+
+<p>A word that is often thrown around (very often without definition) in the mobile industry these days is native. 
+
+</p><p>It's typically used in the context of application platforms, frameworks, and ecosystems, suggesting that the one with the native label is somehow closer to the hardware, which implies (depending on which camp the labeller is sitting in) either harder to use (bad) or giving you better performance (good).
+
+</p><p>A strict definition of native code would probably involve compilation before deployment into instructions executed directly by hardware.
+
+</p><p>My assertion is that even if something is strictly native, that does not automatically mean it is any better or worse than a competing non-native equivalent.
+
+</p><p>I see many different kinds and levels of virtual machines and abstractions as you roam up and down the software stack. Some might be labelled native, other not. But each of those abstractions need to be judged and compared on their actual merits and failings, not solely by a label.
+
+</p><p style="font-size:75%;">(An aside: ecosystem is an interesting choice of metaphor for the mobile application platforms. They tend to be ecosystems that involve one giant and heavily armed animal trapping thousands of defenceless small animals, making them fight against each other for survival with two paws tied together, and then finally stealing a share of all the food they collect. If that was a natural ecosystem would the small animals quickly die, or else work out how to untie their paws and keep all their food?)
+
+</p><p>
+<a href="http://thndl.com/gl/?64">
+<img style="float:left;width:64px;height:128px;margin:10px;" src="./ThNdl  Noise from numbers_files/gl(30).s">
+</a>
+
+</p><p>Like many people I know (and possibly some of you reading), I've spent more than a few years now assembling the operating systems for many kinds of different phones and devices - some you might have seen and used, and others that you never got the chance to try.
+ 
+
+</p><p>In that time I've been lucky enough to work at many levels of the giant software stacks in those devices, from kernels and device drivers sitting bare on the hardware, through systems and servers in the middle, up to UI frameworks and applications at the top that you - with your user hat on - see and interact with directly.
+
+</p><p>
+<a href="http://thndl.com/gl/?65">
+<img style="float:right;margin:10px;width:128px;height:128px;" src="./ThNdl  Noise from numbers_files/gl(31).s">
+</a>
+
+</p><p>If you've been a user of devices like smartphones, but not actively involved with making the software that runs them, you might not fully appreciate that these are some of the most complex systems humans have created to date.
+
+</p><p>To start with, there are a staggering number of individual processing cores in a typical device like an iPhone. Normally we just focus attention on the big and fast CPU cores, of which the latest devices typically have 2 (dual) or 4 (quad). 
+
+</p><p>But often many subsystems and peripherals integrated inside the chip at the heart of the device can have full independantly-executing processing cores of their own. Integrated graphics processing units (GPUs) have multiple shader units. Modems can have multiple ARM and DSP cores. WiFi &amp; Bluetooth peripherals can have another ARM core dedicated for running those protocols. Multimedia subsystems can have DSPs or ARM cores for audio and video processing. 
+
+</p><p>Since it's the responsibility of the operating system in the phone has to tie all those pieces together and make them work as one consistent whole, that naturally makes operating systems very complex, typically needing many millions of lines of source code. 
+
+</p><p>
+<a href="http://thndl.com/gl/?66">
+<img style="float:right;margin:10px;width:128px;height:128px;" src="./ThNdl  Noise from numbers_files/gl(32).s">
+</a>
+</p><p>Earlier, I've had the chance to spend some time working a little bit outside the box, with a performance profiling tool that gives you the complete picture of exactly what every process, thread and module of an operating system is doing at once, and how they are interacting with each other, at a resolution of billionths of a second - which is the timescale that current systems operate at. Exploring systems and use cases with that was a very educational experience.
+
+</p><p>Every piece of software is written to work in a particular kind of environment. Part of that environment comes from the language the software is written in. Another part comes from how that language is finally executed. Yet another part is from the runtime environment it executes within. And finally there are the APIs and interfaces offered to interact with the world outside the environment - files, network, displays, etc.
+
+</p><p>All of these things are abstractions - constructed on top of some other lower level environment, (ideally) with a goal of making it easier to achieve things than it would have been if done directly with that underlying environment.
+
+</p><p>At the top of the abstraction stack we have the high-level app frameworks, with environments like Java, Javascript, QML, or HTML5. 
+
+</p><p>Underneath those come lower-level application environments based on C++ or ObjectiveC compiled to hardware-executed instructions, backed up with a large set of libraries and service APIs.
+ 
+</p><p>Below those, we typically stay with compiled C-languages, but strip away the dependencies on other services until the lowest level "user space" components depend only on something like a C library and some interfaces from the kernel.
+
+</p><p>At this point, we are still working in virtual machines - typically called threads or processes - that conveniently hide away messy details like which page in which RAM chip our memory blocks came from.
+ 
+</p><p>Jumping down from there we reach "kernel space". What that means in practice is that the CPU switches to a different (priviledged or supervisor) mode which gives the code running there much more control and visibility. The developers at this level still work with C or even hand-written assembler code, but they usually have a different and simpler set of abstractions to build on. Now we are underneath or outside those user-space virtual machines, able to see the "real" memory pages they are using, for instance.
+
+</p><p>It doesn't stop there. The kernel itself can be living inside a virtual machine like a hypervisor, which might route some hardware events or interrupts to be handled by a different parallel software stack unknown to the kernel.
+
+</p><p>Going down further we get to a high-level hardware view of the world, and enter a different universe of parallel blocks, clock domains, buses, caches, and other logical parts that come together to create the virtual environment executing the kernel or hypervisor.
+
+</p><p>Slightly surprisingly, hardware is often developed with software-like languages and abstractions. Due to the high financial and schedule cost of mistakes, hardware developers spend much more time simulating and testing their code before comitting it to silicon (it's always fun when hardware and software developers try to communicate and agree things - a bit like like venus and mars).
+
+</p><p>We could go further down - gates, electrons, quantum effects and subatomic particles, and finally out to the fundamental universe simulation we all think we're living in. (Woah, toooo deeeep. Emergency surface!)
+
+</p><p>
+<a href="http://thndl.com/gl/?67">
+<img style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(33).s"></a>
+
+</p><p>Where was I? Oh yes. Levels of abstraction.
+
+</p><p>The higher you go, the more amplifying the abstractions tend to be. By this I mean that a small set of operations can cause very much action from the system underneath. Powerful, but also a little bit dangerous.
+
+</p><p>The lower you go, the more direct the abstractions tend to be. For instance, they are often concerned with controlling the state of actual pieces of hardware, or HW subsystems of the device you are running on.
+
+</p><p>Any abstraction can be designed well, or designed badly. 
+
+</p><p>A good abstraction gives you expressive power to achieve a goal with less effort, in part because it handles many (lower level) problems for you. In the best case it can often do this with good or better performance than a naive hand-made solution working at a lower level.
+
+</p><p>On the other hand, a bad abstraction can hide things from you that could be easily achieved working at a lower level. Or even worse, it could totally fail to handle lower level problems for you while also leaving you unable to solve them either, due to hiding the lower levels from you. 
+
+</p><p>Descriptions like native and non-native are not synonyms for good and bad abstractions.
+
+</p><p>I've used complex but poorly-performing libraries and frameworks based entirely on C++. 
+
+</p><p>I've also used productive and high-performance libraries based on interpreted languages.
+
+</p><p>The performance of many software-based virtual machines has increased hugely in recent years. An "arms race" in Javascript just-in-time (JIT) compilation engines has made some cases rival traditional compilation. Similarly in the Java and Python (PyPy) worlds. 
+
+</p><p>Flexible compiler frameworks like LLVM blur the lines further about exactly when and how the final hardware instructions are created and executed, for example allowing many specialised versions of a function optimised at run time for each different kind and value of data being processed - something that isn't feasible with ahead-of-time compilation. 
+
+</p><p>Taking my own favourite area - shader programs. These are usually distributed and deployed as text-based source code in a hardware-neutral language (like GLSL). They are then compiled on demand on the device running the application into hardware instructions, which are then uploaded to a graphics processing unit and run in parallel on many tiny processors. This approach can be <i>orders of magnitude</i> faster that an equivalent C++ program run on a traditional CPU. Is that approach native?
+
+</p><p>The most important thing is to really study and benchmark an abstraction, to determine if, in actual practical use, it is well designed and bringing more value than costs. 
+
+</p><p>Some of the questions to ask are:
+
+</p><li>Can problems be solved with less effort using this abstraction than the level below it?
+</li><li>Are the problems really solved, or do solutions using the abstraction actually tend to create new problems like reduced performance or increased memory consumption?
+</li><li>Does the abstraction prevent features of the level below from being used? If so which ones, and is their loss a good trade for the features the abstraction brings?
+</li><li>Does the abstraction offer an extension or binding route to the level below? If so, is using that still less work than entirely working at the level below? (not always the case!)
+
+<p>Keep your wits about you. Don't be swayed either way by something being labelled native or not. Look for the good abstractions that solve old problems for you, and help you solve new ones with less effort. 
+
+</p><p>Challenge or fix or bypass the bad abstractions that claim to make 80% of the development or deployment easier, but in reality make the final 20% impossible. 
+</p><p>And watch out for giant animals.
+
+
+</p></li></div></div><div class="break"></div><div class="article" id="11"><div class="title"><a onclick="totarget(11);return false;" href="http://thndl.com/?11">Continuously discrete</a></div><div class="date">Last updated: Mon, 05 Nov 2012 22:00:00 GMT
+
+</div><div id="artxt11" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?11&text=ThNdl:%20Continuously%20discrete&url=http://thndl.com/?11&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?11">Google+</a>
+<a href="http://thndl.com/gl/?56"><img class="cntr" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(34).s"></a>
+
+<p>Smooth looking images have every pixel quite similar to the ones all around them, while still being different enough to form a picture that isn't just one solid colour.
+
+</p><p>When a shader program is used to make an image, it is typically fed with input values (say x and y coordinates) that are only slightly different for each pixel. 
+
+</p><p>If those slight differences are preserved in the calculations the shader makes, the output image will be smooth.
+
+</p><p>Interesting images however need <b>changes</b> in them. Tools like <code>step</code>, <code>mod</code> and <code>abs</code> are good for creating those, but still they tend to generate quite predictable images, which are actually not so interesting. 
+
+</p><p>What we could really make use of is a way to create <i>discrete</i> values from continuous values. That would let us make different parts of an image clearly different.
+
+</p><p>Say I want to make a very simple picture - four coloured squares, each one a different colour. Let's try with <code>step</code> first:
+
+</p><p><a href="http://thndl.com/gl/?57">
+<code>
+vec2 s=step(0.,c.xy);
+<br>f=vec4(s.x,s.y,0.,1.)
+<br>
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(35).s">
+</a>
+
+</p><p>Applying the step to x and y makes 4 regions around the center (0,0) point. Negative values are zero, positive values are 1. Mapping x and y to red and green gives us four colours - 0+0=black,0+1=green,1+0=red,1+1=yellow.
+
+</p><p>Can the same approach now gives us 9 different coloured squares?
+
+</p><p>
+<a href="http://thndl.com/gl/?58">
+<code>
+vec2 s=0.5*(step(-0.333,c.xy)+step(0.333,c.xy));
+<br>f=vec4(s.x,s.y,0.,1.)
+<br>
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(36).s">
+</a>
+
+</p><p>Well, yes. Adding the result of 2 steps at minus and plus 1/3rd and scaling the result to be between 0 and 1, now with intermediate values of 1/3 and 2/3, worked. But it's clear this approach won't scale up if we want 10 or 100 steps.
+
+</p><p>So, what would be another approach? If we would scale up our input range to the number of steps we want, in this case 0-3, and then simply throw away the fractional parts, so that 1.2 becomes 1, and 2.3 becomes 2, and finally scale the result back, that should give us the same result. 
+
+</p><p>The GLSL function we need here is <code>floor</code>. Let's try it out:
+
+</p><p>
+<a href="http://thndl.com/gl/?59">
+<code>
+vec2 s=floor(3.*(c.xy*.5+.5))/2.;
+<br>f=vec4(s.x,s.y,0.,1.)
+<br>
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(10).s">
+</a>
+
+</p><p>The looks practically identical to the double step version, but now we only have one function. The coordinate calculation was a bit messy because we had to scale from -1-1 to 0-3, then we divided by 2 to get the result back in the range 0-2. 
+
+</p><p>(You may have spotted that at the right edge the result is 3, not 2, which scales back down to 1.5 instead of 1. But it doesn't matter in this case because that still clamps to 1 when used as a colour value).
+
+</p><p>The big advantage of our new approach is that it scales to any number of steps. Here's a 5x10 grid which is almost the same as the 3x3. But this time, instead of a gradient, I'm going to use it to count to 50. In shades of grey.
+
+</p><p>
+<a href="http://thndl.com/gl/?60">
+<code>
+vec2 s=floor(vec2(5.,10.)*(c.xy*.5+.5));
+<br>f=vec4(0.02*(s.x+5.*s.y))
+<br>
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(37).s">
+</a>
+
+</p><p>What do you mean that wasn't as interesting as you expected? Ok, how about this.
+
+</p><p>Using our new-found ability to count in a shader, why don't we combine that with something we developed earlier. Here's 50 shapes. All grey, of course.
+
+</p><p>
+<a href="http://thndl.com/gl/?61">
+<code>
+vec2 r=vec2(5.,10.)*(c.xy*.5+.5);
+<br>vec2 i=floor(r);
+<br>vec2 c=(fract(r)-.5)*vec2(4.,2.)*.6;
+<br>float s=3.+i.x+5.*i.y;
+<br>float a=atan(c.x,c.y);
+<br>float b=6.28319/s;
+<br>float w=floor(.5+a/b); 
+<br>float g=smoothstep(.55,.5,cos(w*b-a)*length(c.xy));
+<br>f=vec4(vec3(1.-g*((60.-s)/50.)),g);
+<br>
+</code>
+<img class="cntr" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(38).s">
+</a>
+
+</p><p>The polygon shader from earlier took a parameter for the number of sides. By feeding the counting value to the polygon shader, we get polygons with increasing numbers of sides depending on the count value in that region of the image. It also uses the count to choose the grey shade.
+
+</p><p>
+
+</p><p>But I think I've had enough of grey shades for now, and I've also had enough of RGB.
+
+</p><p>A different model for mixing colours is HSV - Hue (colour), Saturation (whiteness) and Value (darkness). A nice feature of hue is that it repeats - a hue of 1 is the same as a hue of 0.
+
+</p><p>I'm going to finish now by using our count to pick a hue, the polygon side to pick a value, and the distance from the centre to pick a saturation.
+
+</p><p>That should make, well, something.
+
+</p><p>
+
+<code>
+<a href="http://thndl.com/gl/?62">
+vec2 r=vec2(5.,10.)*(c.xy*.5+.5);
+<br>vec2 i=floor(r);
+<br>vec2 c=(fract(r)-.5)*vec2(4.,2.)*.6;
+<br>float s=3.+i.x+5.*i.y;
+<br>float a=atan(c.x,c.y);
+<br>float b=6.28319/s;
+<br>float w=floor(.5+a/b); 
+<br>float g=smoothstep(.55,.5,cos(w*b-a)*length(c.xy));
+<br>float v=1.-1.2*length(c.xy);
+<br>float sa=1.-abs(w/s);
+<br>float h=s/50.;
+<br>vec3 rgb=v*sa*clamp(abs(mod(h*6.+vec3(0.,2.,4.),6.)-3.)-1.,0.,1.)+(v-v*sa);
+<br>f=vec4(1.-g*rgb,g);
+<br>
+</a></code><a href="http://thndl.com/gl/?62">
+<img class="cntr" style="width:100%;" src="./ThNdl  Noise from numbers_files/gl(39).s">
+</a>
+</p></div></div><div class="break"></div><div class="article" id="10"><div class="title"><a onclick="totarget(10);return false;" href="http://thndl.com/?10">Going round in squircles</a></div><div class="date">Last updated: Mon, 29 Oct 2012 21:00:00 GMT
+
+</div><div id="artxt10" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?10&text=ThNdl:%20Going%20round%20in%20squircles&url=http://thndl.com/?10&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?10">Google+</a>
+<p>If you were an N9 user, you might have noticed something about the shapes of many of the icons it used.
+
+</p><p>They weren't quite the usual squares, or even rectangles with rounded corners, but another shape called (I kid you not) a <a href="http://en.wikipedia.org/wiki/Squircle"><b>squircle</b></a>, which if that wikipedia link is to be believed, is a kind of "superellipse". 
+
+</p><p>Here's a picture of a squircle (in red) and a similar sized rounded rectangle (in green) so you can see the subtle differences:
+
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(40).s">
+
+</p><p>The corners are less curved than the rounded rectangle.
+
+</p><p>I described earlier how to make a rounded rectangle shader in the <a href="http://thndl.com/?5">Square shaped shaders</a> article.
+
+</p><p>To make a squircle, again we start by using length, though it won't be quite a distance field we make. Wikipedia says we need to have a power of 4. So lets try this one:
+
+<a href="http://thndl.com/gl/?52">
+<code>
+<br><br>f=vec4(1.-length(c.xy*c.xy*c.xy*c.xy));
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(41).s">
+</a>
+
+</p><p>It already looks quite squircley, doesn't it? That's before we've even applied a step function. 
+
+</p><p>Here it is with the (smooth)step to make a solid shape with smooth edges:
+
+<a href="http://thndl.com/gl/?53">
+<code>
+<br><br>float s=1.-length(c.xy*c.xy*c.xy*c.xy);<br>f=vec4(smoothstep(0.,0.1,s));
+</code>
+<img class="cntr" width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(42).s">
+</a>
+
+</p><p>I think it's quite nice - a bit more natural than plain rounded corners. It makes a nice mask or alpha channel for a PNG.
+
+</p><p>Here it is as the border for a beautifully calm and relaxing sky photo:
+
+<img width="256" height="256" class="cntr" src="./ThNdl  Noise from numbers_files/gl(43).s">
+
+</p><p>Nah, that wasn't a photo after all, just another <a href="http://thndl.com/gl/?40">shader</a>.
+
+</p><p>There is another way to write the squircle function which will lead us somewhere new. Instead of c.xy multiplied together 4 times, we can use the GLSL <code>pow</code> function, like this:
+
+<br><br><code>f=1.-length(pow(c.xy,vec2(4.)));</code>
+
+</p><p>We already know that a power of 1 will give us a circle. Well, a large power will give us something very close to a square. But what about other numbers?
+
+</p><p>Here's a power of 3:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(44).s">
+
+</p><p>Slightly curvier corners. Now a power of 2:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(45).s">
+
+</p><p>Even curvier. Next 1.5 - yes, powers don't have to be integers:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(46).s">
+
+</p><p>Now 1.25:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(47).s">
+
+</p><p>We'll skip 1 - the circle. How about 0.85:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(48).s">
+
+</p><p>0.5 is surprising:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(49).s">
+
+</p><p>A diamond! 
+
+</p><p>And a last one to end with, 0.25:
+
+<br><br><img class="cntr" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(50).s">
+</p></div></div><div class="break"></div><div class="article" id="9"><div class="title"><a onclick="totarget(9);return false;" href="http://thndl.com/?9">Mixing it up a bit</a></div><div class="date">Last updated: Mon, 29 Oct 2012 06:00:00 GMT
+
+</div><div id="artxt9" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?9&text=ThNdl:%20Mixing%20it%20up%20a%20bit&url=http://thndl.com/?9&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?9">Google+</a>
+<p>With just a few shader functions like <code>length, mod</code> and <code>max</code>, I can make simple repeating shapes like squares, circles, and lines. With stretching and skewing of the coordinates, these can be moulded in all kinds of interesting ways.
+
+</p><p>But still, when I'm trying to create a more complex image, more techniques are needed.
+
+</p><p>One function that opens up a whole new world of possibilities is the GLSL blending function <code>mix</code>. 
+
+</p><p>This takes 3 parameters - two values, which can be either scalar floats or vectors like colour values - and a blend value, which is a float between 0.0 and 1.0. 
+
+</p><p>When the blend value is zero, the result is the first value, and when it is one, it is the second value. But in between, the result is a linear mix of both values.
+
+</p><p>This probably becomes clearer with an example:
+
+<a href="http://thndl.com/gl?47">
+<code>
+<br><br>f=vec4(mix( vec3(.0,.0,.5), vec3(.0,.5,1.), c.y*.5+.5),1.)
+</code></a>
+
+<br><br><img width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(51).s">
+<br>
+
+</p><p>In this case we are mixing solid colours depending on the height in the image- dark blue at the top, and sky blue at the bottom. 
+
+</p><p>Ok, this would make a nice background for something, so how do I now put something else as foreground?
+
+</p><p>I'll try mix again with a circle and put it on top of the sky. 
+
+<a href="http://thndl.com/gl?48">
+<code>
+<br><br>vec3 sky=mix( vec3(.0,.0,.5), vec3(.0,.5,1.), c.y*.5+.5);
+<br>float circle=smoothstep(.25,.3,1.-length(c.xy));
+<br>f=vec4(mix( sky, vec3(0.6), circle),1.);
+</code>
+
+<br><br><img width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(52).s">
+</a><br>
+
+</p><p>Notice how I assigned the circle to a float to use as the blend value between the background sky colour, and the light grey I chose for the circle. The smoothstep made sure they were blended smoothly at the edges of the circle.
+
+</p><p>I can also use mix to take things away: 
+
+<a href="http://thndl.com/gl?49">
+<code>
+<br><br>vec3 sky=mix( vec3(.0,.0,.5), vec3(.0,.5,1.), c.y*.5+.5);
+<br>float circle=smoothstep(.25,.3,1.-length(c.xy));
+<br>float shadow=smoothstep(.25,.3,1.-length(c.xy+vec2(.5,0.)));
+<br>f=vec4(mix( sky, vec3(.6),mix(circle,0.,shadow)),1.);
+</code>
+
+<br><br><img width="256" height="256" src="./ThNdl  Noise from numbers_files/gl(53).s">
+</a><br>
+
+</p><p>Now I made another copy of the circle, the same size, but shifted to the left by 0.5, called shadow. Then I used shadow as the blend value for another mix, selecting the background sky instead of the grey wherever the shadow is. This ends up taking a big chunk out of the original circle making it look a bit more moon-like, as I intended.
+
+</p><p>As you can see, mix allow much more complex images to be built up by different combinations of shapes and colour.
+
+</p><p>One interesting consequence of this way of image construction is that every pixel must calculate all the values it could possibly have - all the paths of the program flow - selecting the final one based on the mixing values. 
+
+</p><p>This might seem rather expensive, and you might be wondering why I'm not making use of conditional statement such as <code>if</code>.
+
+</p><p>It is true that shaders support <code>if</code>, but it's worth remembering that usually shaders are not run on normal processors, but rather on GPUs which are made up from very many simple processors called shader units.
+
+</p><p>Very often these processors work quite inefficiently when they have to choose between two different program flows - pipelines can be stalled, and many cycles of processing time wasted.
+
+</p><p>By just calculating every path and selecting the final output with mix - which is not a conditional statement - the execution time is predictable and no time is wasted.
+
+</p><p>This is not to say a conditional version might not be faster in some cases on some GPUs. But it won't always automatically be the case.
+
+</p><p>Another approach for combining is the traditional approach to have more than one shader, and draw each item with a seperate OpenGL draw operation. In some cases this might deliver much better performance.
+
+</p><p>But it also limits the kind of combining operations that can be done because the only per-pixel data you can easily pass between the shader instances is an alpha value. It can be more complex to set up than a single shader, and is less easy to reuse in different ways than a single shader program.
+</p></div></div><div class="break"></div><div class="article" id="8"><div class="title"><a onclick="totarget(8);return false;" href="http://thndl.com/?8">Shade from the clouds</a></div><div class="date">Last updated: Fri, 26 Oct 2012 06:00:00 GMT
+
+</div><div id="artxt8" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?8&text=ThNdl:%20Shade%20from%20the%20clouds&url=http://thndl.com/?8&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?8">Google+</a>
+<p>Since cloud services are hot, I figured that ThNdl should have one too. 
+
+</p><p>Yep, you guessed it: <b>CloudShading</b>.
+
+</p><p>No, I'm only joking. Well, kind of.
+
+</p><p>In fact a few of you have been using one version of my "CloudShading Service" already through <a href="http://thndl.com/gl">ThNdl Shader Editor</a>. That is (IMVHO) quite useful for learning something about shaders. But to be honest, it's not very useful for anything practical.
+
+</p><p>However, you might have noticed that when you press the "Image" button, your browser downloads an image from a URI that seems to include the shader itself (slightly encoded of course) plus a few other parameters.
+
+</p><p>That's how the backend for the shader editor, and the serving of <b>all</b> the images on ThNdl works. 
+
+</p><p>Behind my web server is a python server which takes shaders encoded in URIs, and passes them to a Mesa LLVMPIPE instance (which does GLES2 SW multi-threaded rendering, no X dependencies or real GPU!). 
+
+</p><p>That <b>compiles</b> the shaders (returning any errors), <b>renders</b> them (to a pbuffer), <b>encodes</b> the image to either JPEG, PNG or GIF format, <b>caches</b> the result, and <b>returns</b> it to you, or rather your web browser.
+
+</p><p>Actually, given that it's all CPU-based, it works surprisingly well and fast. My server is a <a href="http://linode.com/">Linode 512 instance</a> which has 4 (err...virtual) cores and 512Mb of RAM, and the rendering makes full use of all cores. It can manage something like 10 unique 512x512 shaders per second, depending on shader complexity.
+
+</p><p>However, apart from when you are editing shaders, most shaders and images requested have already been made earlier and are returned directly from the cache. This can handle a few thousand requests per second.
+
+</p><p>It all sounds a bit crazy, I know. But the practical result is that I can embed shaders into HTML and CSS wherever an Image is specified by URI. That means at least <code>IMG</code> elements, CSS <code>background-image</code> and CSS <code>border-image</code>. 
+
+</p><p>Since images-from-shaders don't need to be prepared in advance, I can rapidly design and tweak images from the same source as the text of the blog.
+
+</p><p>I know that CSS is quite flexible, and getting more so all the time. But the potential of programmable shaders goes way beyond what "fixed function" CSS definitions can achieve. 
+
+</p><p>Actually I'm hoping that the <a href="http://html.adobe.com/webstandards/csscustomfilters/">"CSS Custom filters"</a> that Adobe has been trying to get standardised eventually bring shaders natively. But even if that comes, it will take some time before it works widely. In the meantime, my approach works practically <i>everywhere</i>.
+
+</p><p>Ok, so the "service" is there, has already "proven" itself by serving up 20000 or so images without problems, and maybe one or two of you are now thinking you could make use of it from some app or page of your own. 
+
+</p><p>Well, feel free. 
+
+</p><p>Naturally since you aren't paying anything for it, it comes with zero guarantees. But it should work from other domains, and if it doesn't I can add any needed CORS headers to the server output. 
+
+</p><p>If, in the unlikely event that it suddenly gets too popular, I might pull the plug, or limit it to use only by ThNdl, or add ads in every 100th image, or (gasp) charge money, or something. But I'm not really expecting that.
+
+</p><p>Sadly, textures are not supported, even though I know that would open up huge possibilities (e.g. if you could give a URI to another image to feed in as a texture). But I'm not confortable with all the implications of that for a non-commercial service. Sorry!
+
+</p><p>Oh, so now you want some documentation too! grumble...
+
+</p><p>Ok, here goes. Requests should go to: 
+
+</p><p><code>http://thndl.com/gl.s? width : height : format : uniforms : vertex_shader : fragment_shader</code>
+
+</p><p>Width and height must be between 1 and 512. GIFs are limited to 128.
+
+</p><p>Format is a horrible hack. 100-0 means JPEG of that quality. -1 means PNG. -2 to -40 means GIF with that many frames.
+
+</p><p>The vertex shader is optional - I'll explain how that works later. If you don't need it, leave it and one ":" out.
+
+</p><p>Uniforms are not normally used, but up to 4 floating point values can be passed, seperated by ","
+
+</p><p>Example: <br><code>http://thndl.com/gl.s?128:128:-1::f=vec4(1.,0.,1.,abs(c.y))</code>
+
+</p><p>This requests a PNG 128x128 pixels, purple, transparent in the vertical middle. Here it is:
+
+<img src="./ThNdl  Noise from numbers_files/gl(54).s">
+
+</p><p>Have fun!
+
+</p></div></div><div class="break"></div><div class="article" id="7"><div class="title"><a onclick="totarget(7);return false;" href="http://thndl.com/?7">The Art of Repepetition</a></div><div class="date">Last updated: Mon, 22 Oct 2012 04:00:00 GMT
+
+</div><div id="artxt7" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?7&text=ThNdl:%20The%20Art%20of%20Repepetition&url=http://thndl.com/?7&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?7">Google+</a>
+<div style="width:100%;height:128px;background-image:url(&#39;gl.s?128:128:-40::vec2 r=mod(8.*(c.xy*.5+.5+vec2(.25*t,0.)),2.)-1.;f.a=sqrt(.95-length(r))&#39;)"><img src="./ThNdl  Noise from numbers_files/gl(55).s"></div>
+
+<p>(If you're reading this in the RSS feed and there isn't a wide animation above this line, I suggest you read the article from the web version for the full giftastic experience) 
+
+</p><p>Sometimes, differences everywhere aren't what you need. Constraints, like limited memory, bandwidth or performance, call for a different strategy.
+
+</p><p>Filling large areas of space when you can't pick a unique colour for each point means mastering the art of <b>repetition</b>.
+
+</p><p>You're probably already thinking I'm talking about shaders again. But I could just as well be referring to curtains, or wallpaper, <a href="http://www.william-morris.co.uk/">a century ago</a>, when the art of creating beautiful seamlessly-repeating patterns was (re)discovered.
+
+</p><p>Ok, ok, so this is going to be more shader stuff after all. I'm going to describe how to work with small canvases that get presented as tiles, for example with the <a href="http://www.w3.org/wiki/CSS/Properties/background-image">CSS background-image</a> property.
+
+</p><p>But before we dive in, some news. <a href="http://thndl.com/gl">ThNdl Shader Editor</a> has undergone a major upgrade to support this article. Naturally it needed tiling support if we're going to be playing with tiles. But there's more. 
+
+</p><p>I added a gallery which you can use to browse existing shaders, and where you can publish your creations to share with a short URL, or for others to find and play with. The Image button gives you your creation as an image file you can save easily. 
+
+</p><p>And finally, it's gone boldly into the 4th dimension (i.e. time - or you might say time travel back to the 90s) with support for the <a href="http://mashable.com/2012/10/19/animated-gif-history/">venerable</a>, but (for some reason) not easily replaced, <b>Animated GIF</b> format. More about that one later.
+
+</p><p>Ok, back to the topic. Tiles. Well, tiles are of course rectangular or square. Since opposite edges get drawn next to other, it is of course easy to make tiled patterns with sharp lines at the edges. For example:
+
+<a href="http://thndl.com/gl/#20">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:80::f=vec4(c.xy*.5+.5,c.x*c.y,1.)&#39;);"><a href="http://thndl.com/gl/#20">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(56).s">
+</a></div><a href="http://thndl.com/gl/#20"><code>f=vec4(c.xy*.5+.5,c.x*c.y,1.)</code></a>
+
+<p>Easy, but...err..boring and <i>very</i> obviously repeating. Clearly the first thing to do is work out how to make it seamless.
+
+</p><p>One approach is to make it symmetrical within the tile about one axis so that opposite edges match. For example:
+
+<a href="http://thndl.com/gl/#21">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:80::vec2 m=abs(c.xy);f=vec4(m.xy,m.x*m.y,1.)&#39;);"><a href="http://thndl.com/gl/#21">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(57).s">
+</a></div><a href="http://thndl.com/gl/#21"><code>vec2 m=abs(c.xy);<br>f=vec4(m.xy,m.x*m.y,1.)</code></a>
+
+<p>Here we used <b><code>abs</code></b> to reflect the negative regions of c.xy, making it symmetrical around the centre. The result is smoother and a little nicer, but the edges are still quite visible.
+
+</p><p>If we want to get rid of the edges, we're going to need to make friends with <b><code>mod</code></b>, one of the two masters of repetition (the other is <b><code>sin</code></b>).
+
+</p><p>If you don't know mod, it's simply the remainer from a division operation. In shaders, the mod function takes two values, and calculates the remainer of the first divided by the second. 
+
+</p><p>The reason this is useful for us is that mod lets us do maths and pretend the edges are not there, as long as we promise to make our results at the top and bottom of the mod range match up. Take a look:
+
+<a href="http://thndl.com/gl/#22">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:80::vec2 m=mod(c.xy+c.x+c.y,1.);f=vec4(m.xy,m.x*m.y,1.)&#39;);"><a href="http://thndl.com/gl/#22">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(58).s">
+</a></div><a href="http://thndl.com/gl/#22"><code>vec2 m=mod(c.xy+c.x+c.y,1.);<br>f=vec4(m.xy,m.x*m.y,1.)</code></a>
+
+<p>First we skewed the original coordinate space, then we wrapped that in mod(1.0). That wouldn't have worked without the mod, but with the mod, the deformations on either side of the tile match up. 
+
+</p><p>One thing, you can't do just any deformation - it needs to be compatible with the tile size to avoid creating breaks, which typically means integer multiples.
+
+</p><p>In this case we left the hard edges in, rather than matching them, but even now those edges are no longer identical to the tile shape. Tiling angled lines are just a short (smooth)step or two away.
+
+ <a href="http://thndl.com/gl/#23">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:80::vec2 m=mod(c.xy+c.x+c.y,1.);f=vec4(smoothstep(.75,.5,m.y)*smoothstep(.25,.5,m.y))&#39;);"><a href="http://thndl.com/gl/#23">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(59).s">
+</a></div><a href="http://thndl.com/gl/#23"><code>vec2 m=mod(c.xy+c.x+c.y,1.);<br>f=vec4(smoothstep(.75,.5,m.y)*<br>smoothstep(.25,.5,m.y))</code></a>
+
+<p>Alternatively, to get rid of lines, we could use our old friend <b><code>length</code></b>.
+
+<a href="http://thndl.com/gl/#24">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:80::vec2 m=mod(c.xy+c.x+c.y,2.)-1.;f=vec4(length(m))&#39;);"><a href="http://thndl.com/gl/#24">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(60).s">
+</a></div><a href="http://thndl.com/gl/#24"><code>vec2 m=mod(c.xy+c.x+c.y,2.)-1.;<br>f=vec4(length(m))</code></a>
+
+<p>Now this starts to get interesting. You might have spotted something else here - one of my favourite cheap tricks. Instead of mod(1.0), this used mod(2.0) and subtracted 1 from the result. 
+
+</p><p>That puts this back into the range (-1,1), which is needed for symmetrical operations like creating a circle using length. Wrapping that in abs would create a zig-zag between 0-1 with no breaks - also very useful.
+
+</p><p>Time for something completely different... GIFs, GIFs, gimme more GIFs...
+
+</p><p>I promised to say more about GIFs in the <a href="http://thndl.com/gl">ThNdl Shader Editor</a>. If you click "JPEG" it will change to "GIF", and your world will go monochrome... huh? 
+
+</p><p>Yeah, well, GIF, being so old, can only handle 256 colours. So, to avoid the need for dithering we only support B&amp;W using the alpha value from the shader.
+
+</p><p>In return for this we get up to 40 frames of 10FPS animation (with quite miserable compression) that animates in most browsers. Good deal, huh?
+
+</p><p>The only other thing you need to do is use the value t in your shader. This is 0 in the first frame, and 1 in the last frame, smoothly changing in-between. You use it to drive your animation.
+
+</p><p>The interesting thing is that many of the rules that apply in 2D space for tiling, <i>also</i> apply to the animation tilling in the time dimension, if you want to get smooth animation that is.
+
+</p><p>Time for some examples:
+
+<a href="http://thndl.com/gl/#25">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:-40::vec2 m=mod(c.xy+c.x+c.y+2.*t,2.)-1.;f.a=length(m)&#39;);"><a href="http://thndl.com/gl/#25">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(61).s">
+</a></div><a href="http://thndl.com/gl/#25"><code>vec2 m=mod(c.xy+c.x+c.y+2.*t,2.)-1.;<br>f.a=length(m)</code></a>
+
+<p>By adding 2.*t to the deformation from the previous shader, now it scrolls smoothly forever, muhahaha.
+
+<a href="http://thndl.com/gl/#26">
+</a></p><div style="width:100%;height:160px;background-image:url(&#39;gl.s?64:64:-40::float N=7.;float a=atan(c.x,c.y)+6.28319*t/N;float b=6.28319/N;f.a=smoothstep(.5,.55,cos(floor(.5+a/b)*b-a)*length(c.xy))&#39;);"><a href="http://thndl.com/gl/#26">
+<img width="64" height="64" src="./ThNdl  Noise from numbers_files/gl(62).s">
+</a></div><a href="http://thndl.com/gl/#26"><code>float N=7.;float a=atan(c.x,c.y)+6.28319*t/N;<br>float b=6.28319/N;f.a=smoothstep(.5,.55,<br>cos(floor(.5+a/b)*b-a)*length(c.xy))</code></a>
+
+<p>Making the <a href="http://thndl.com/#5">heptagons</a> slowly rotate just needs t scaled by 2/N PI and added to the angle. It only needs to turn by one segment in 40 frames so it is very smooth.
+
+</p><p>Also to be found in the gallery is the <a href="http://thndl.com/gl/#19">ball animation</a> from the top of this article, and the <a href="http://en.wikipedia.org/wiki/Bridget_Riley">eye-bending</a> <a href="http://thndl.com/gl/#18">Riley</a>.
+
+</p><p>Go on, have a play with it and try out some of the repetition techniques. If you come up with something nice, don't forget to post it to the gallery for the rest of us to see.
+</p></div></div><div class="break"></div><div class="article" id="6" style="height: 361px;"><div class="title"><a onclick="totarget(6);return false;" href="http://thndl.com/?6">Riley</a></div><div class="date">Last updated: Thu, 18 Oct 2012 20:15:00 GMT
+
+</div><div id="artxt6" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?6&text=ThNdl:%20Riley&url=http://thndl.com/?6&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?6">Google+</a>
+<p>I was busy mixing some shaders with a bit of new server infrastructure, and something potent emerged that demanded a mini post for itself.
+
+</p><p>But first a warning. If you have eyes and a brain and you click this link, one or both of them may come away hurting. Don't say I didn't warn you!
+
+</p><p>Ok, here goes. Click the link:
+
+</p><div style="width:90%;background-color:#404040;font-size:200%;text-align:center;"><a href="http://thndl.com/riley.html">Riley</a></div>
+
+</div></div><div class="break"></div><div class="article" id="5"><div class="title"><a onclick="totarget(5);return false;" href="http://thndl.com/?5">Square shaped shaders</a></div><div class="date">Last updated: Tue, 16 Oct 2012 09:42:00 GMT
+
+</div><div id="artxt5" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?5&text=ThNdl:%20Square%20shaped%20shaders&url=http://thndl.com/?5&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?5">Google+</a>
+<p><i>(Don't forget - you can click on any of the examples here to try them out in an interactive shader editor.)</i>
+
+</p><p>We already <a href="http://thndl.com/#1">saw</a> how the GLSL (that's the OpenGL Shader Language) built-in function "length" can be used to calculate the distance of a point from the centre (0,0) - great for making circles. 
+
+</p><p>GLSL has many other built in functions. Lets use a couple of those to make squarish shapes.
+
+<a href="http://thndl.com/gl/#vec2 r=abs(c.xy); f=vec4(r,0.,1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#vec2 r=abs(c.xy); f=vec4(r,0.,1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(63).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=abs(c.xy);<br>f=vec4(r,0.,1.)
+</code></div>
+</a></div>
+
+<p>The <b><code>abs</code></b> function makes negative numbers positive - it reflects them around zero. Since our c coordinate is negative to the left and top, taking the abs of it and setting the red to c.x, and green to c.y, gives a symmetrical image around the centre.
+
+<a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(s),1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(s),1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(64).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=abs(c.xy);<br>float s=max(r.x,r.y);<br>f=vec4(vec3(s),1.)
+</code></div>
+</a></div>
+
+<p>Now we inserted a <b><code>max</code></b> function. This takes two arguments, and returns the largest one for each element. In this case it returns either r.x or r.y, depending on which is larger.
+
+</p><p>This gives us an interesting and useful <b>distance field</b>. In this field, the value gives the distance of that point from the nearest point on the nearest edge of a square.
+
+</p><p>The simple <code>length(c.xy)</code> distance field we made previously was useful for giving us different sized circles. This one can give us different kinds of squares.
+
+<a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=step(.5,max(r.x,r.y)); f=vec4(vec3(s),1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=step(.5,max(r.x,r.y)); f=vec4(vec3(s),1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(65).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=abs(c.xy);<br>float s=step(.5,max(r.x,r.y));<br>f=vec4(vec3(s),1.)
+</code></div>
+</a></div>
+
+<p>As with the circular distance field, a step function changes the field to a solid square shape. By changing the threshold value for the step, we can make larger or smaller squares.
+
+</p><p>But we don't have to limit ourselves to solid squares.
+
+<a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(step(.4,s)*step(s,.5)),1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(step(.4,s)*step(s,.5)),1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(66).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=abs(c.xy);<br>float s=max(r.x,r.y);<br>f=vec4(vec3(step(.4,s)* step(s,.5)),1.)
+</code></div>
+</a></div>
+
+<p>By multiplying two step functions with reversed argument orders and different thresholds, we can make a hard edge which is as wide as we like.
+
+</p><p>Now if we change from using step to using smoothstep, we can make the edge softer.
+
+<a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(smoothstep(.3,.4,s)*smoothstep(.6,.5,s)),1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#vec2 r=abs(c.xy); float s=max(r.x,r.y); f=vec4(vec3(smoothstep(.3,.4,s)*smoothstep(.6,.5,s)),1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(67).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=abs(c.xy);<br>float s=max(r.x,r.y);<br>f=vec4(vec3(smoothstep(.3,.4,s)* smoothstep(.6,.5,s)),1.)
+</code></div>
+</a></div>
+
+<p>If you are looking for something slightly less square, then we need a different distance field, like this one.
+
+</p><p>This time we subtract an offset - in this case 0.3 - from the abs, and then take the max of that and zero before taking the length of the result.
+
+<a href="http://thndl.com/gl/#float r=length(max(abs(c.xy)-.3,0.)); f=vec4(r,r,r,1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#float r=length(max(abs(c.xy)-.3,0.)); f=vec4(r,r,r,1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(68).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=length(max( abs(c.xy)-.3,0.));<br>f=vec4(r,r,r,1.)
+</code></div>
+</a></div>
+
+<p>As you can see, this again gives a square in the middle with size determined by the offset amount. But now the field near the corners is curved instead of straight.
+
+</p><p>You can probably guess already what shape we will get when we apply a step function.
+
+<a href="http://thndl.com/gl/#float r=step(.2,length(max(abs(c.xy)-.3,0.))); f=vec4(r,r,r,1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#float r=step(.2,length(max(abs(c.xy)-.3,0.))); f=vec4(r,r,r,1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(69).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+vec2 r=step(.2, length(max(abs(c.xy)-.3,0.)));<br>f=vec4(r,r,r,1.)
+</code></div>
+</a></div>
+
+<p>Yes, it's a square with rounded corners. By tweaking the step threshold you can get more or less roundedness. The pair of steps from earlier could also be used to give a round edged border.
+
+</p><p>Finally lets try yet another way to create a square. This one is a bit more expensive because it's based on angles. First we find the angle of each point using the <b><code>atan</code></b> function.
+
+</p><p>Then we scale the angle to be in the range -1.5 to 2.5 and then round it down to the nearest integer using the floor function. This puts each point into one of four quadrants. 
+
+</p><p>We then turn that back into an angle and subtract the difference between that and the actual angle. Taking cos of that difference and multiplying by the length of the original point gives the distance of that point along the vector for the centre line of the quadrant. Finally a step turns that into a square. Phew.
+
+<a href="http://thndl.com/gl/#float a=atan(c.x,c.y);f=vec4(step(.5,cos(floor(a*.636+.5)*1.57-a)*length(c.xy)))">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#float a=atan(c.x,c.y);f=vec4(step(.5,cos(floor(a*.636+.5)*1.57-a)*length(c.xy)))">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(70).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+float a=atan(c.x,c.y);
+<br>f=vec4(step(.5,cos( floor(a*.636+.5)* 1.57-a)*length(c.xy)))
+</code></div>
+</a></div>
+
+<p>The nice thing about this approach is that with a different scale factor, it can give us ANY regular polygon, not just a square. It's also easy to rotate with an offset to the angle. 
+
+</p><p>Here is a parameterised version (from @srodal) which defaults to a 7-side heptagon.
+
+<a href="http://thndl.com/gl/#int N=7; float a=atan(c.x,c.y)+.2; float b=6.28319/float(N); f=vec4(vec3(smoothstep(.5,.51,cos(floor(.5+a/b)*b-a)*length(c.xy))),1.);">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);-webkit-column-break-inside:avoid;"><a href="http://thndl.com/gl/#int N=7; float a=atan(c.x,c.y)+.2; float b=6.28319/float(N); f=vec4(vec3(smoothstep(.5,.51,cos(floor(.5+a/b)*b-a)*length(c.xy))),1.);">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(71).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+int N=7;
+<br>float a=atan(c.x,c.y)+.2;
+<br>float b=6.28319/float(N);
+<br>f=vec4(vec3(smoothstep(.5,.51, cos(floor(.5+a/b)*b-a)*length(c.xy))),1.);
+</code></div>
+</a></div>
+
+<p>These basic techniques start to open up all kinds of possibilities for constructing more interesting and useful images just using shaders.
+</p></div></div><div class="break"></div><div class="article" id="4"><div class="title"><a onclick="totarget(4);return false;" href="http://thndl.com/?4">Learning to shade</a></div><div class="date">Last updated: Wed, 10 Oct 2012 14:30:00 GMT
+
+</div><div id="artxt4" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?4&text=ThNdl:%20Learning%20to%20shade&url=http://thndl.com/?4&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?4">Google+</a>
+<p>So far on ThNdl, I've shown you some simple OpenGL shaders, and teased you with some not-so-simple ones. 
+
+</p><p>If the whole idea of shaders is new to you, you might be wondering how you can learn more about them. I think, as with most things, the best way to learn is by doing. 
+
+</p><p>When I started thinking of writing about shaders, I wanted to find a way for you to play around with the ideas I am describing wherever you are. 
+
+</p><p>I've spent a little time working on one solution to this, so for the coming posts I'll be linking all the shader examples to a <b>live shader editor</b> you can use from many recent web browsers. It doesn't support any animation, only still images, but it should still be enough for you to try all the things out.
+
+</p><p>To kick things off, you can try it out on this nice colourful shader, with just two expressions, which builds on the circle from <a href="http://thndl.com/#1">The Pixel Swarm article</a>. 
+
+</p><p>Press or Click on it to open the interactive editor. Change some numbers, and see what happens. If you aren't sure what's going on when you get there, then just come back here and I'll give you some pointers.
+
+<a href="http://thndl.com/gl/#float r=1.-length(2.*c.xy); f=vec4(c.xy*r,r,1.)">
+</a></p><div style="padding:5px;margin:5px auto;width:250px;background-color:rgb(80,80,80);"><a href="http://thndl.com/gl/#float r=1.-length(2.*c.xy); f=vec4(c.xy*r,r,1.)">
+<img style="display:block;margin:5px auto;" width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(72).s">
+<div style="width:250px;margin:5px auto 5px;text-align:center;"><code>
+float r=1.-length(2.*c.xy);<br>f=vec4(c.xy*r,r,1.)
+</code></div>
+</a></div>
+
+<p>Welcome back! 
+
+</p><p>You may have noticed already that when you write a number, it needs to have a decimal point, but you can drop leading or trailing zeroes. For example: 1.0 can be written 1. and 0.1 can be written .1
+
+</p><p>New variables can be declared when you need to use a value more than once. In this case we declared a single floating point variable called r, and then used the value of r twice in the second expression.
+
+</p><p>Expressions need to end with a semi-colon, but I add one to the final expression so you don't need to do that every time.
+
+</p><p>The whole program is run once for every pixel in the image, each time with a slightly different value for the two variables I picked as the input coordinates, c.x and c.y. That means that if you want to make something other than a solid colour, you need to find ingenious mathematical ways to modify those before turning them into colours.
+
+</p><p>In the coming posts, I'll describe some of these techniques so that we can make some more complex images.
+
+</p><p>The editor I'm using does not require any new browser features like WebGL. However if you have a good PC and the right browser, you might have WebGL support. That allows you to use OpenGL and shaders from Javascript in your browser. If that's the case, here are another couple of options to try.
+
+</p><p>The first one to check is <a href="https://twitter.com/iquilezles">Inigo Quilez'</a> nice <a href="http://www.iquilezles.org/apps/shadertoy/">Shader Toy</a>. This comes with many examples and demos, though unfortunately some of them no longer work with the latest WebGL versions as the spec has changed since the site was first created.
+
+</p><p>Another one I like is the <a href="http://glsl.heroku.com/">GLSL Sandbox</a> by <a href="https://twitter.com/mrdoob">Mr Doob</a> and friends. This has an ever expanding gallery of contributions which are fascinating to try and understand. Watch out though, many of them need a good GPU to run with reasonable speed!
+
+</p><p>On mobile devices, your options are more limited. For some mysterious reason, WebGL has been mostly missing-in-action on mobile devices. (This is odd because WebGL was based on OpenGL ES2, which is available on just about every smartphone and tablet today).
+
+</p><p>On iOS it's only available for ads (<i>?!?</i>), though Firefox beta for Android has recently added support. However, WebGL pages intended for high-end desktop machine will generally not work well on mobile GPUs. 
+
+</p><p>Another option is to find a port of the Shader Toy as an app, e.g. from the Android Play Store.
+
+</p><p>Now there is nothing to stop you learning to shade!
+</p></div></div><div class="break"></div><div class="article" id="3"><div class="title"><a onclick="totarget(3);return false;" href="http://thndl.com/?3">Whoops, we forgot a dimension</a></div><div class="date">Last updated: Mon, 08 Oct 2012 09:42:00 GMT
+
+</div><div id="artxt3" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?3&text=ThNdl:%20Whoops,%20we%20forgot%20a%20dimension&url=http://thndl.com/?3&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?3">Google+</a>
+<p>Many of you are probably reading this on a device that looks something like this.
+ 
+<img style="float:left;max-width:118px;max-height:248px;margin:10px;" src="./ThNdl  Noise from numbers_files/gl(73).s" class="cntr">
+
+</p><p>The "tall thin slab full of screen" form factor for phones seems to be becoming the norm as we move away from hardware keys. The biggest variable these days seems to be size, which is quite proportional to price.
+
+</p><p>Others of you will have a bigger device - some kind of tablet - looking something like this.
+
+<img style="float:left;max-width:241px;max-height:185px;margin:10px;" src="./ThNdl  Noise from numbers_files/gl(74).s" class="cntr">
+
+</p><p>The common factor with these two classes of device is probably that they have large capacitive touch screens, and no keyboard.
+
+</p><p>A few years ago when people started to seriously try and use the web from devices other than PCs, sites were all "Best Viewed at 1024x768" or even "800x600". 
+</p><p>Squeezing those sites onto small portrait-first screens was a challenge for mobile browsers. Zooming in to make text readable often gave columns that were too wide to fit, and panning round to find everything was a frustrating experience.
+
+</p><p>This was solved eventually by the emergence of special layouts and sites for mobile devices, that squeezed the site to one screen width of readable text, and as many pages high as needed to show everything. Now that paradigm already seems ubiquitous.
+
+</p><p>But during that shift, we forgot a dimension. Now we are all happily flicking up and down, going forwards and backwards through our giant articles and lists. But what about the x dimension - left and right?
+
+</p><p>When I started thinking about how <a href="http://thndl.com/">ThNdl</a> could look and be used on a portrait touchscreen phone, I wanted to find a way for effortless navigation both within <b>and</b> between articles.
+  
+</p><p>I wanted to avoid the need for you to have to find some button to press to change article. And I wanted to avoid something involving layers of content that moved independantly, because making that kind of design work everywhere with good performance is a challenge.
+
+</p><p>While exploring the options, I found out support for CSS columns already seems to be widespread in most current browsers. That allows you to display items split over a specified number of columns, like this:
+
+</p><p><code>
+div{<br>
+-column-count: 2;<br>
+}</code>
+
+</p><p>The resulting item will be as high as needed to show all the content. Unfortunately however, splitting a long article like that makes things worse. Now when you get to the bottom of the first column, you need to scroll all the way back up to the top and right to continue reading. 
+ 
+</p><p>However, CSS columns can also be set to automatically add as many columns as needed to display all the content. All you have to do is specify the height. And of course the height to use on a mobile device should be the screen height, so that now you only need to scroll right to continue reading.
+
+</p><p>As long as the columns are taller than wider, this is <i>theoretically</i> easier to use than the single column view, because you have to scroll a shorter distance to get the next lump of new text fully visible.  
+
+</p><p>And when column support isn't available (*cough*IE*cough*), it falls back gracefully to a single column.
+
+</p><p>So columns seemed viable for articles, and also quite natural since people have been reading articles that way on paper for a long time. The x dimension was claimed for navigating within articles. That left the y dimension - up and down - free for browsing between articles, with just one screen-height of scrolling needed. 
+
+</p><p>With the articles all aligned at the left, a quick flick left should take the reader quickly from the end of an article back to column containing the start or all articles - much more quickly than doing that same in a single vertical column.
+
+</p><p>Conceptually it looked something like this.
+
+<img style="float:left;max-width:180px;max-height:256px;margin:10px;" src="./ThNdl  Noise from numbers_files/gl(75).s">
+
+</p><p>So much for the neat theory... as always, the practical reality quickly gets messy and complicated.
+
+</p><p>With some javascript to deal with the usual browser differences, a resizing function got the basics in place. On a portrait phone screen you see one screen height column. Panning right takes you to the next column.
+
+</p><p>On larger screens, the resizing tries to avoid too wide or too thin columns, and chooses either 2 or 3. For instance, on an iPad you should see 2 columns in portrait, and 3 in landscape.
+
+</p><p>The resize gets triggered by a window resize, which happens on an orientation change in most environments.
+
+</p><p>Now, text is quite breakable - it doesn't mind too much what column it's in. But images are a different story. The CSS column model can be persuaded to try not to break items in the middle, which works on some more recent browsers. But it leaves a big gap.
+
+</p><p>If the column height gets smaller than the biggest image, then all bets are off, and the images will get broken in an ugly way.
+
+</p><p>Unfortunately, landscape phone screens turn out to be the case where the screen height is very squeezed due to system and (in Chrome's case) browser UI taking up space at the top.
+
+</p><p>Another problem was the breaks between articles. When the CSS model expands columns, it doesn't seem to give you a way to find out how many columns it actually made, or how wide the result really is. So the breaks were either too wide or too thin. I had to workaround that by checking different values in different browsers.
+
+</p><p>What about usability? One big advantage of normal one dimensional scrolling is that you can be very sloppy when flicking - it only moves up or down anyway. But when the page is wider than the screen, sloppy flicking takes you away from the article. Mobile Safari tries to constrain to either horizontal or vertical scrolling, which helps, but it stays stuck in one mode until scrolling stops which can be annoying.
+
+</p><p>And then there is the good old desktop. Mac users and some PC touchpad users have it ok with horizontal and vertical two-finger scroll gestures, but in other places horizontal scrolling is a pain. Dragging scroll bars with a mouse pointer is also a bit hopeless. 
+
+</p><p>Keyboard scrolling works, but it's often jerky, and with speed based on key repeat intervals. And there is no Page-Left, Page-Right key to help (which is a bit odd when you think about pages in books!).
+
+</p><p>I tried Javascript tricks liks snapping from onscroll after a little while, or overriding cursor keys, but so far they have always hit compatibility problems in different places
+
+</p><p>Regarding Javascript, ThNdl web site is currently "App like" - which means the code you first get from the server contains none of the articles - they are fetched afterwards with Javascript. So, no JS, no articles - it turns out that's a problem for some users, and other sites showing summaries (like LinkedIn).
+
+</p><p>So, what next? Well, I introduced a <a href="http://thndl.com/rss.p">full-content RSS feed</a> as an alternative (1D, no JS) way to read, because many people just don't want to have to read with a browser, full stop. 
+
+</p><p>The landscape phone layout has been tweaked to use a smaller font which should improve it. And I'm going to see if I can do something to help desktop/mouse/keyboard usability - for instance some keyboard shortcuts. After that, we'll see. 
+</p><p>But I'm not too keen to have to learn to forget that x dimension again.
+
+
+</p></div></div><div class="break"></div><div class="article" id="2"><div class="title"><a onclick="totarget(2);return false;" href="http://thndl.com/?2">Logo</a></div><div class="date">Last updated: Thu, 04 Oct 2012 09:42:00 GMT
+
+</div><div id="artxt2" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?2&text=ThNdl:%20Logo&url=http://thndl.com/?2&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?2">Google+</a>
+<p>
+In pixels
+</p><p>
+<img style="max-width:256px;max-height:256px;" class="cntr" src="./ThNdl  Noise from numbers_files/gl(76).s">
+</p><p>In code
+</p><p>
+<code>
+c=vec4(pos.xy,0.,0.); b=vec4(pos.x*cos(o.x)-pos.y*sin(o.x), pos.x*sin(o.x)+pos.y*cos(o.x),0.,0.);
+<br>float r,s,l,h,i,k,m,n; m=clamp(1.5-abs(b.y),0.2,1.5)+d.x*50.; i=step(-0.01,c.y); h=step(-0.01,b.y); k=step(-0.99,b.y)*(1.-h)*(1.-smoothstep(0.027*m-d.x*2., 0.03*m,abs(b.x))); l=length(c); r=1.0-smoothstep(1.-d.x*2.,1.,l); s=1.0-smoothstep(.5-d.x*2.,0.5,l); float t=atan(c.x/c.y); float u=(t+3.141*0.5)/3.141; vec4 ryg=vec4(0.69*clamp(mix(vec3(.0,2.,0.), vec3(2.,0.,0.),u),0.0,1.0),2.4-2.*l); vec4 tg=mix(vec4(ryg.rgb,0.),ryg,r); n=clamp(1.75*l-0.75,0.,1.); vec4 bg=mix(tg,vec4(0.,0.,0.,1.-n),i); float v=atan(c.x,c.y); n=.9+.1*sin((20.*l+v)*5.); vec4 w=vec4(n,n,n,1.); vec4 e=mix(bg,w*vec4(vec3(abs(mod(v+3.141*0.75, 2.*3.141)/3.141-1.)),1.),s); f=mix(e,vec4(vec3(1.-(30.*abs((b.x/m+0.01)))),1.),k);
+</code>
+
+</p></div></div><div class="break"></div><div class="article" id="1"><div class="title"><a onclick="totarget(1);return false;" href="http://thndl.com/?1">The Pixel Swarm</a></div><div class="date">Last updated: Wed, 03 Oct 2012 09:42:00 GMT
+
+</div><div id="artxt1" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?1&text=ThNdl:%20The%20Pixel%20Swarm&url=http://thndl.com/?1&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?1">Google+</a>
+<p>Until quite recently, I was working a lot with Qt. One of the best and most fun features in the latest version - Qt5 - is the <a href="http://doc-snapshot.qt-project.org/5.0/qml-qtquick2-shadereffect.html">QML ShaderEffect</a>, which lets you <a href="http://www.youtube.com/watch?v=0j-Wakm5B84#t=4m46s">easily draw and animate</a> almost anything to the screen using just a tiny OpenGL shader program.
+
+</p><p>If you aren't familiar with shaders, they are small programs - typically only a few lines of code - which are run directly on a GPU. But, be warned... once you start learning and writing them it's hard to stop!
+
+</p><p>(When I first heard about shaders, I have to admit they sounded like scary arcane magic that I would never be able get to grips with. But it turned out that the magic was mostly just boilerplate setup code you needed to get started, and once you got past that they were actually quite simple.)
+
+</p><p>In the dim distant past of software history (say, 5 years ago) it has been common to create complex graphic scenes by making many calls for drawing primitive shapes on top of each other, giving positions, sizes and colours each time. These were the GDI or (in Qt's case) Painter APIs.
+
+</p><p>However, when you want to get the most out of that shiny GPU in your computer or phone, this is not always the best way to do things. Every time you touch a pixel, it potentially has to run another program. 
+
+</p><p>If you have many items on top of each other, this means the hardware has to change state very often - something GPUs really don't like to do - and in the worst case will do a lot of work which is never even seen if the shape on top is not transparent.
+
+</p><p>An alternative to that traditional approach is to create a single program for the whole scene which will result in the desired image emerging after it is run just once, without any expensive state changes, for every pixel.
+
+</p><p>It's like this: imagine a swarm of <b><i>exotic chameleon bees</i></b> buzzing in front of you. 
+
+</p><p>Through millions of years of genetic programming (if you believe in that sort of thing), each bee has been programmed to change colour depending only on how high up it is in the air. 
+
+</p><p>Near the ground, each bee makes itself more brown, and in the air it makes itself more blue. The bees cannot communicate with each other, and yet this is what you see:
+
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(77).s" class="cntr">
+
+</p><p>Probably not so surprising when described that way.
+
+</p><p>Now lets take that idea of a swarm of independant pixels and start to program them into something interesting. We'll start with a simple GLSL shader that takes an interpolated 2D (x and y) coordinate "c" which is (-1,-1) in the top left, and smoothly changes to (+1,+1) at the bottom right. I'll leave out the boilerplate to keep things clearer (f is the same as gl_FragColor).
+
+<code></code></p><p><code>f = vec4(c.x, c.y, 0.0, 1.0);</code>
+
+</p><p>f expects 4 values - red, green, blue and alpha (transparency), each in the range 0 to 1, and collected into a "vec4". It then sets the pixel to that colour. 
+
+</p><p>This program just sets the red and green components of each pixel to the coordinate. Since these colour values can only go from 0 to 1, and not -1 to +1, that makes the top left region (with all negative coordinates) all black, and the bottom right corner yellow, like this:
+
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(78).s" class="cntr">
+
+</p><p>Now lets try something more complex:
+
+<code></code></p><p><code>float d = length(c.xy);
+<br>f = vec4(d, d, d, 1.0);</code>
+
+</p><p>This time we've created another variable d, and set that to the distance of every pixel from the centre using the built in "length" function. Then we set the colour to that value. The result is a circular gradient, black in the centre, and white at the edges, like this:
+
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(79).s" class="cntr">
+
+</p><p>Ok, so we've now done linear and radial gradients with just 3 lines of code. From here, it's just a few steps to go from a gradient, to a shape. 
+
+<code></code></p><p><code>float d = step(0.1, 1.0-length(c.xy));
+<br>f = vec4(0.0, 1.0, 0.0, d);</code>
+</p><p>First we subtract the length from 1, so that it is 1 at the centre and smaller as it gets further away.
+
+</p><p>Then we add a step function. This returns either 0 or 1 depending on whether the argument is above or below the threshold (0.1 in this case). 
+
+</p><p>Finally, we set the green colour value to 1, and instead change only the final "alpha" or transparency value. Together, this gives us a green circle with a transparent background:
+
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(80).s" class="cntr">
+
+</p><p>Remember, none of the bees, err, I mean pixels, have communicated with each other to make the circle. It just emerged by running the same program for each pixel, telling each one only where it is in the picture. 
+
+</p><p>That's important for performance, because it means this program can be run in <i>parallel</i> on many independant processors (modern desktop GPUs have hundreds of them), without each one needing to wait to know the result of any of the other pixels. 
+
+</p><p>Sadly the edges of the circle that emerged are horribly jagged, and I <i>really</i> hate the jaggies. But we can fix that with another small change:
+
+<code></code></p><p><code>float d = smoothstep(0.08,0.1,1.-length(c.xy));
+<br>f = vec4(0.0, 1.0, 0.0, d);</code>
+
+</p><p>The smoothstep function is almost like step, but takes 2 thresholds. Below the lower it is zero, and above the upper it is one. But in between it smoothly interpolates between 0 and 1. Now the jaggies are gone:
+
+<img width="128" height="128" src="./ThNdl  Noise from numbers_files/gl(81).s" class="cntr">
+
+</p><p>Mmmm, smoooth.
+
+</p><p>Well, I think that should be just enough for now to start to whet your appetite for shaders.
+
+</p></div></div><div class="break"></div><div class="article" id="0"><div class="title"><a onclick="totarget(0);return false;" href="http://thndl.com/?0">Welcome to ThNdl</a></div><div class="date">Last updated: Tue, 02 Oct 2012 09:42:00 GMT
+
+</div><div id="artxt0" class="text"><a class="tweet" href="https://twitter.com/intent/tweet?original_referer=http://thndl.com/?0&text=ThNdl:%20Welcome%20to%20ThNdl&url=http://thndl.com/?0&via=baldand">Tweet</a><a class="tweet" href="https://plus.google.com/share?url=http://thndl.com/?0">Google+</a>
+<p>Welcome! 
+
+</p><p>The first rule of ThNdl is don't forget to PAN RIGHT to find the articles (unless you're on IE with no columns support).
+
+</p><p>This is a blog written by myself, Andrew Baldwin (baldand@twitter). 
+
+</p><p>The articles will cover all kinds of things I'm interested in, including but not limited to software performance, graphics, mobile devices, and user experience.
+
+</p><p>ThNdl is a reboot of a similar blog - TheNeedle - I used to write a few years ago for the Nokia intranet BlogHub, so if you are a former or (like me) current Nokian, it might seem vaguely familiar. However, this incarnaion of the blog won't be focusing on Nokia. 
+
+</p><p>In classic Internet tradition, during the rebooting process I felt compelled to lose the vowels in order to grab the shortest relevant domain name that didn't already point to a knitting site or domain reseller. Actually, I was a bit surprised to find a suitable 5 letter .com still available in 2012. 
+
+</p><p>Unlike another recent BlogHub reboot - @jpzip's <a href="http://realboxscore.com/">realboxscore.com</a> - I decided not to use an existing blog platform to start with, but rather to learn through mistakes by rolling my own. So, expect the unexpected, and give me feedback, as you read this on hardware and platforms I don't have. We'll see how this works out, especially when it comes to comments. 
+
+</p><p>Regarding comments and feedback, until I get round to adding a comment system, you can send your thoughts directly to me (once again, @baldand) via Twitter.
+
+</p><p>I've been told that columns are old fashioned, so you might be wondering about the layout. I'm already a bit bored and frustrated with the "giant scrolling 1D page" paradigm when reading on mobile devices. 
+
+</p><p>So, at least to start with, I'm trying an experiment with 2D layout. On most semi-modern browsers, articles should be screen height and as many columns as needed to the right. To jump to the next articles, just scroll up or down. Let me know what you think of that, or if I should just give in and go 1D.
+
+</p><p>Finally, apologies in advance if you happen to come from across the pond, but colourful British-English spellings - notable for a lack of zees, or even zeds - shall be utilised throughout. I'm sure you'll get used to it in case you carry on reading!
+</p></div></div><div class="break"></div></div>
+<div id="footer">All content ©2012 Andrew Baldwin. All reproduction/syndication rights reserved. Made with vim,git,python,mesa and GLSL.</div>
+</div>
+<!--</div>
+</div>-->
+
+
+</body></html>

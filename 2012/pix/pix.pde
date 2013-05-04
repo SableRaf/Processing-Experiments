@@ -15,11 +15,11 @@ int side = 3; // default grid width
 int seed = 0; // default random seed (no need to edit this one)
 
 void setup() {
-  //size(200, 200, P2D);
-  size(displayWidth, displayHeight, P2D);
+  size(200, 200, P2D);
+  //size(displayWidth, displayHeight, P2D);
   noSmooth();
   noCursor();
-  frameRate(3);
+  frameRate(6);
   
   /*
   myShader = loadShader("shader.frag");
@@ -38,13 +38,14 @@ void draw() {
   // sketch window without reloading it every time.
   // Just edit and save shader.frag to apply the changes.
   myShader = loadShader("shader.frag");
-  myShader.set("resolution", float(width), float(height));
+  //myShader.set("resolution", float(width), float(height));
   shader(myShader);
   
   seed = (int)random(0,1000);
   
-  myShader.set("time", (float)(millis() / 1000.0));
+  //myShader.set("time", (float)(millis() / 1000.0));
   myShader.set("mouse", float(mouseX), float(mouseY));
+  
   myShader.set("side", (float)side);
   myShader.set("seed", (float)seed);
   

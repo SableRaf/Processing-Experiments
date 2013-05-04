@@ -19,6 +19,8 @@ public class PingPongFBO extends PApplet {
 // http://www.bantherewind.com/wrap-your-mind-around-your-gpu
 // Ported to Processing by Rapha\u00ebl de Courville <twitter.com/sableRaph>
 
+// see also: http://www.comp.nus.edu/~ashwinna/docs/PingPong_FBO.pdf
+
 /*
 * Copyright (c) 2012, Ban the Rewind
 * All rights reserved.
@@ -72,6 +74,7 @@ boolean isRefraction = true;
 public void setup() {
   size(1024, 768, P2D);
   noStroke();
+  frameRate(60);
   
   ping = createGraphics(width, height, P2D);
   pong = createGraphics(width, height, P2D);
@@ -80,70 +83,69 @@ public void setup() {
   
   scene = new PImage(width,height);
   
+  // Set ping and pong to black for the first pass
   ping.beginDraw();
   ping.background(0);
   ping.endDraw();
   
-  rippleShader = loadShader("gpgpu_frag.glsl", "passThru_vert.glsl");
-  refractionShader = loadShader("refraction_frag.glsl", "passThru_vert.glsl");
-
-  testShader = loadShader("test.glsl");
+  pong.beginDraw();
+  pong.background(0);
+  pong.endDraw();
   
-  image = loadImage("texture.jpg");
+  rippleShader = loadShader("gpgpu_frag.glsl");
+  refractionShader = loadShader("refraction_frag.glsl");
   
   pixelSize = new PVector(1.0f/width, 1.0f/height); // dimension of the pixel in [0,0]-[1,1]
+  rippleShader.set("pixel", pixelSize.x, pixelSize.y);
+  refractionShader.set("pixel", pixelSize.x, pixelSize.y);
+  
+  image = loadImage("texture.jpg");
+    
+  println("setup() finished ok");
 }
 
 public void draw() {
   background(0,255,0);
   
-  rippleShader.set("pixel", pixelSize.x, pixelSize.y);
-  refractionShader.set("pixel", pixelSize.x, pixelSize.y);
-  
-  // Animate
-  rippleShader.set("buffer", ping); // set previous result as data buffer
-  
   pong.beginDraw();
-  if(mousePressed) {
-    pong.fill(255,0,0);
-    pong.ellipse(mouseX,mouseY,32,32); // Draw a red circle
-  }
+  pong.noStroke();
   pong.shader(rippleShader);
-  pong.rect(0, 0, width, height);
+  pong.image(pong, 0, 0, width, height); // previous "pong" is passed to the new iteration of the shader
+  pong.resetShader(); // Restore the default shaders
+  pong.fill(255,0,0); // Drops will be red
+  if(frameCount%10==0)pong.ellipse((int)random(width),(int)random(height),20,20); // Draw the drops
   pong.endDraw();
   
-  if(isRefraction) {
+  ping.beginDraw();
     // Refract
-    refractionShader.set("buffer", pong); // set previous result as data buffer
-    refractionShader.set("tex", image);   // set source image to refract
-    
-    ping.beginDraw();
-    ping.shader(refractionShader);
-    ping.rect(0, 0, width, height);
-    ping.endDraw();
-  }
-  else ping.copy(pong, 0, 0, width, height, 0, 0, width, height);
+  ping.shader(refractionShader);
+  // ping.refractionShader.set("buffer", pong); // set previous output as input
+  refractionShader.set("tex", image);   // set source image to refract
+  ping.image(pong, 0, 0); // the "pong" image will be used to refract the source image
+  ping.resetShader();     // Restore the default shaders
+  ping.endDraw();
 
+  // Is refraction enabled? Then we want to display it
+  PGraphics img = isRefraction ?
+                  ping :
+                  pong ;
+                
   // Copy to final scene texture
-  scene.copy(ping, 0, 0, width, height, 0, 0, width, height);
+  scene.copy(img, 0, 0, width, height, 0, 0, width, height);
     
   // Display result
-  image(ping, 0, 0, width, height);
-  //resetShader();
-
-  // Debug
-  testShader.set("resolution", PApplet.parseFloat(width), PApplet.parseFloat(height)); 
-  testShader.set("time", millis() / 1000.0f);
-  testScene.background(0);
-  testScene.shader(testShader);
-  testScene.rect(0,0,width,height);
-  image(testScene, 0, 0, width, height);
+  image(scene, 0, 0, width, height);
 }
 
 public void keyReleased() {
   if(key == 'i') {
     isRefraction = !isRefraction; // toggle the refraction shader pass
-    println("isRefraction = "+isRefraction);
+    
+    String message = isRefraction ?
+                     "Showing ping. isRefraction = "+isRefraction :
+                     "Showing pong. isRefraction = "+isRefraction;
+                     
+    println(message);
   }
 }
 

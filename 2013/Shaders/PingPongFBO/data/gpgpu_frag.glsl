@@ -1,21 +1,24 @@
+
+
+
+
 #ifdef GL_ES
 precision highp float;
 #endif
 
-// Type of shader expected by Processing
-#define PROCESSING_COLOR_SHADER
+#define PROCESSING_TEXTURE_SHADER
 
-// Processing specific input
-//uniform float time;
-//uniform vec2 resolution;
-//uniform vec2 mouse;
+uniform sampler2D texture;
+uniform float time;
+uniform vec2 resolution;
+uniform vec2 mouse;
+
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
 
 //-------------------------------------------------------------------------------
 
-uniform sampler2D	buffer;						// Data texture
 uniform vec2		pixel;						// Size of a pixel in [0,0]-[1,0]
-
-varying	vec2		uv;							// Texture coordinate
 
 const float			dampen	= 0.993;			// Ripple dampening
 const float			power	= 1.5;				// Input power
@@ -24,16 +27,18 @@ const float			speed	=  1.0;				// Ripple travel speed
 // Samples velocity from neighbor
 float getSpring( float height, vec2 position, float factor ) 
 {
-	return ( texture2D( buffer, position ).r - height ) * factor;
+	return ( texture2D( texture, position ).r - height ) * factor;
 }
 
 void main( void ) 
 {
+	vec2 uv = vertTexCoord.st; // Texture coordinates
+
 	// Kernel size
 	vec2 kernel		= pixel * speed;
 
 	// Sample the color to get the height and velocity of this pixel
-	vec4 color		= texture2D( buffer, uv );
+	vec4 color		= texture2D( texture, uv );
 	float height	= color.r;
 	float vel		= color.g;
 

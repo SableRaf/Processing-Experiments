@@ -4,12 +4,15 @@
 precision highp float;
 #endif
 
+#define PROCESSING_COLOR_SHADER
+
 // This is the interface between the sketch and the shader
 // “Uniforms act as parameters that the user of a shader program
 // can pass to that program”: http://www.opengl.org/wiki/Uniform_(GLSL)
 uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
+
 uniform float side;
 uniform float seed; // seed of the random function
 

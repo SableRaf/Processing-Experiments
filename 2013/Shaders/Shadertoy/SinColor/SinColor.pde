@@ -2,15 +2,16 @@ PShader myShader;
 
 void setup() {
   size(640, 360, P2D);
-  noStroke();
+  //noStroke();
  
   myShader = loadShader("shader.glsl");
-  myShader.set("resolution", float(width), float(height));   
+  //myShader.set("resolution", float(width), float(height)); 
+  //myShader.set("resolution", float(3), float(3));   
 }
 
 void draw() {
-  background(0);
-  myShader.set("time", millis() / 1000.0);
+  //background(0);
+  //myShader.set("time", millis() / 1000.0);
   
   shader(myShader);
   // This kind of effects are entirely implemented in the
@@ -19,4 +20,3 @@ void draw() {
   // shader.   
   rect(0, 0, width, height);  
 }
-

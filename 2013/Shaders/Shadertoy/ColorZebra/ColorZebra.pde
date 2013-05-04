@@ -23,6 +23,9 @@ void setup() {
   
   myShader.set("resolution", float(width), float(height));   
   myShader.set("iChannel0", img);
+
+  // Wait until the camera feed becomes available
+  while ( !video.available() ) {}
 }
 
 void draw() {
@@ -30,23 +33,15 @@ void draw() {
   
   myShader.set("time", millis() / 1000.0);
   
-  if (video.available() == true) {
-    videoInit = true;
-  }
-  
-  if(videoInit == true) {
-    video.read();
-    myShader.set("iChannel0", video);
-  }
-  else {
-    myShader.set("iChannel0", img);
-  }
+  video.read();
+  myShader.set("iChannel0", video);
   
   shader(myShader);
   // This kind of effects are entirely implemented in the
   // fragment shader, they only need a quad covering the  
   // entire view area so every pixel is pushed through the 
   // shader.
-  rect(0, 0, width, height);  
+  rect(0, 0, width, height); 
+  filter(THRESHOLD);
 }
 
