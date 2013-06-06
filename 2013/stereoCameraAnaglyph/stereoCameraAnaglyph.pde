@@ -75,6 +75,11 @@ void draw()
   
   rotation+=0.01; //you can vary the speed of rotation by altering this value
  
+  // Draw the scene for each eye
+  drawScene(left, -eyeDist/2);
+  drawScene(right, eyeDist/2);
+ 
+ /*
   // Left Eye
   // Using Camera gives us much more control over the eye position
   left.beginDraw();
@@ -111,11 +116,43 @@ void draw()
   right.popMatrix();
   right.camera(eyeX+eyeDist/2, eyeY, eyeZ,0,0,0,0,-1,0);
   right.endDraw();
+  */
   
   if(isShader) 
    shader(s);
   
   image(left,0,0,width, height);  // Any image will do but we have to call the function
+}
+
+/* All your 3D drawing goes here */
+void drawScene(PGraphics pg, float offset) {
+  
+  int w = pg.width;
+  int h = pg.height;
+  
+  pg.beginDraw();  
+  
+  pg.background(0);
+
+  //some lights to aid the effect
+  pg.ambientLight(64,64,64);
+  pg.pointLight(128,128,128,0,20,-50);
+  
+  pg.pushMatrix();
+  pg.fill(255);
+  pg.noStroke();
+  pg.rotateX(rotation);
+  pg.rotateY(rotation/2.3);
+  pg.scale(height*.003);
+  pg.box(30);
+  pg.translate(0,0,30);
+  pg.box(10);
+  pg.popMatrix();
+  
+  // use custom camera
+  pg.camera(eyeX + offset, eyeY, eyeZ, 0,0,0,0,-1,0);
+  
+  pg.endDraw();
 }
 
 
