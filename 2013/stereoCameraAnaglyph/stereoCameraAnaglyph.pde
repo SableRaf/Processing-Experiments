@@ -79,13 +79,20 @@ void draw()
   drawScene(left, -eyeDist/2);
   drawScene(right, eyeDist/2);
   
+  // Anything we draw after that will be affected by the shader
   if(isShader) 
    shader(s);
   
-  image(left,0,0,width, height);  // Any image will do but we have to call the function
+  // Any image will do but we have to call the function 
+  // as we're using a TEXTURE shader
+  image(left,0,0,width, height);  
+  
+  // Anything we draw after that will 
+  // not be affected by the shader anymore
+  resetShader();
 }
 
-/* All your 3D drawing goes here */
+/* All of your 3D drawing goes here */
 void drawScene(PGraphics pg, float offset) {
   
   int w = pg.width;
