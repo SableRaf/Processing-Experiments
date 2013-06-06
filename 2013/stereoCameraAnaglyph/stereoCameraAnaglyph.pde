@@ -78,45 +78,6 @@ void draw()
   // Draw the scene for each eye
   drawScene(left, -eyeDist/2);
   drawScene(right, eyeDist/2);
- 
- /*
-  // Left Eye
-  // Using Camera gives us much more control over the eye position
-  left.beginDraw();
-  left.ambientLight(64,64,64); //some lights to aid the effect
-  left.pointLight(128,128,128,0,20,-50);
-  left.background(0);
-  left.fill(255);
-  left.noStroke();
-  left.pushMatrix();
-  left.rotateX(rotation);
-  left.rotateY(rotation/2.3);
-  left.scale(height*.003);
-  left.box(30);
-  left.translate(0,0,30);
-  left.box(10);
-  left.popMatrix();
-  left.camera(eyeX-eyeDist/2, eyeY, eyeZ, 0,0,0,0,-1,0);
-  left.endDraw();
- 
-  // Right Eye
-  right.beginDraw();
-  right.ambientLight(64,64,64); //some lights to aid the effect
-  right.pointLight(128,128,128,0,20,-50);
-  right.background(0);
-  right.fill(255);
-  right.noStroke();
-  right.pushMatrix();
-  right.rotateX(rotation);
-  right.rotateY(rotation/2.3);
-  right.scale(height*.003);
-  right.box(30);
-  right.translate(0,0,30);
-  right.box(10);
-  right.popMatrix();
-  right.camera(eyeX+eyeDist/2, eyeY, eyeZ,0,0,0,0,-1,0);
-  right.endDraw();
-  */
   
   if(isShader) 
    shader(s);
