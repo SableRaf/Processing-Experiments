@@ -27,7 +27,7 @@ PVector cameraTarget;
 float eyeX = 0;
 float eyeY = 0;
 float eyeZ = -100; // position of the viewer
-float eyeDist = 3; // distance between the two cameras, the higher, the more the graphics will "pop out"
+float eyeDist = 6; // distance between the two cameras, the higher, the more the graphics will "pop out"
 
 
 PShader simple_anaglyph, optimised_anaglyph;
@@ -40,8 +40,8 @@ Float stereo = 0.0;   // allows for small alignment adjustments to the images
  
 void setup() 
 {
-  size(500,500,P3D);
-  //size(displayWidth,displayHeight,P3D);
+  //size(500,500,P3D);
+  size(displayWidth,displayHeight,P3D);
   
   left = createGraphics(width, height, P3D);
   right = createGraphics(width, height, P3D);
