@@ -16,6 +16,8 @@ uniform float time;
 uniform vec2 resolution;
 uniform vec2 mouse;
 
+uniform sampler2D iChannel0;
+
 // Layer between Processing and Shadertoy uniforms
 vec3 iResolution = vec3(resolution,0.0);
 float iGlobalTime = time;
@@ -23,46 +25,55 @@ vec4 iMouse = vec4(mouse,0.0,0.0); // zw would normally be the click status
 
 // ------- Below is the unmodified Shadertoy code ----------
 
-mat3 m = mat3( 0.00,  0.80,  0.60,
-              -0.80,  0.36, -0.48,
-              -0.60, -0.48,  0.64 );
+//#define FULL_PROCEDURAL
 
+
+#ifdef FULL_PROCEDURAL
+
+// hash based 3d value noise
 float hash( float n )
 {
     return fract(sin(n)*43758.5453);
 }
-
 float noise( in vec3 x )
 {
     vec3 p = floor(x);
     vec3 f = fract(x);
 
     f = f*f*(3.0-2.0*f);
-
     float n = p.x + p.y*57.0 + 113.0*p.z;
-
-    float res = mix(mix(mix( hash(n+  0.0), hash(n+  1.0),f.x),
-                        mix( hash(n+ 57.0), hash(n+ 58.0),f.x),f.y),
-                    mix(mix( hash(n+113.0), hash(n+114.0),f.x),
-                        mix( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
-    return res;
+    return mix(mix(mix( hash(n+  0.0), hash(n+  1.0),f.x),
+                   mix( hash(n+ 57.0), hash(n+ 58.0),f.x),f.y),
+               mix(mix( hash(n+113.0), hash(n+114.0),f.x),
+                   mix( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
 }
+#else
 
-float fbm( vec3 p )
+// LUT based 3d value noise
+float noise( in vec3 x )
 {
-    float f;
-    f  = 0.5000*noise( p ); p = m*p*2.02;
-    f += 0.2500*noise( p ); p = m*p*2.03;
-    f += 0.1250*noise( p ); p = m*p*2.01;
-    f += 0.0625*noise( p );
-    return f;
+    vec3 p = floor(x);
+    vec3 f = fract(x);
+	f = f*f*(3.0-2.0*f);
+	
+	vec2 uv = (p.xy+vec2(37.0,17.0)*p.z) + f.xy;
+	vec2 rg = texture2D( iChannel0, (uv+ 0.5)/256.0, -100.0 ).yx;
+	return mix( rg.x, rg.y, f.z );
 }
+#endif
 
 vec4 map( in vec3 p )
 {
 	float d = 0.2 - p.y;
 
-	d += 3.0 * fbm( p*1.0 - vec3(1.0,0.1,0.0)*iGlobalTime );
+	vec3 q = p - vec3(1.0,0.1,0.0)*iGlobalTime;
+	float f;
+    f  = 0.5000*noise( q ); q = q*2.02;
+    f += 0.2500*noise( q ); q = q*2.03;
+    f += 0.1250*noise( q ); q = q*2.01;
+    f += 0.0625*noise( q );
+
+	d += 3.0 * f;
 
 	d = clamp( d, 0.0, 1.0 );
 	
@@ -82,16 +93,18 @@ vec4 raymarch( in vec3 ro, in vec3 rd )
 	vec4 sum = vec4(0, 0, 0, 0);
 
 	float t = 0.0;
-	for(int i=0; i<44; i++)
+	for(int i=0; i<64; i++)
 	{
+		if( sum.a > 0.99 ) continue;
+
 		vec3 pos = ro + t*rd;
 		vec4 col = map( pos );
 		
 		#if 1
 		float dif =  clamp((col.w - map(pos+0.3*sundir).w)/0.6, 0.0, 1.0 );
 
-        vec3 brdf = vec3(0.65,0.68,0.7)*1.35 + 0.45*vec3(0.7, 0.5, 0.3)*dif;
-		col.xyz *= brdf;
+        vec3 lin = vec3(0.65,0.68,0.7)*1.35 + 0.45*vec3(0.7, 0.5, 0.3)*dif;
+		col.xyz *= lin;
 		#endif
 		
 		col.a *= 0.35;
@@ -99,11 +112,10 @@ vec4 raymarch( in vec3 ro, in vec3 rd )
 
 		sum = sum + col*(1.0 - sum.a);	
 
-		//if (sum.a > 0.99) break;
         #if 0
 		t += 0.1;
 		#else
-		t += max(0.1,0.05*t);
+		t += max(0.1,0.025*t);
 		#endif
 	}
 

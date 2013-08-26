@@ -1,7 +1,7 @@
 PShader myShader;
 
 void setup() {
-  size(640, 360, P2D);
+  size(512, 290, P2D);
   noStroke();
  
   myShader = loadShader("shader.glsl");
@@ -18,5 +18,9 @@ void draw() {
   // entire view area so every pixel is pushed through the 
   // shader.   
   rect(0, 0, width, height);  
+  
+  resetShader();
+  
+  text("fps: " + round(frameRate), 10, 10); 
 }
 

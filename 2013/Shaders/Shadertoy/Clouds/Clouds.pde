@@ -1,13 +1,18 @@
 PShader myShader;
 
+PImage texture;
+
 void setup() {
   size(640, 360, P2D);
   noStroke();
   
   frameRate(-1);
  
+  texture = loadImage("256noise.png");
+ 
   myShader = loadShader("shader.glsl");
-  myShader.set("resolution", float(width), float(height));   
+  myShader.set("resolution", float(width), float(height));
+  myShader.set("iChannel0", texture);
 }
 
 void draw() {
