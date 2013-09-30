@@ -58,7 +58,7 @@ void setup() {
   //background(0);
   
   paintscreen.beginDraw();
-  paintscreen.image(bgImage,0,0);
+  paintscreen.background(155);
   paintscreen.endDraw();
   
   x = width/2;
@@ -103,9 +103,9 @@ void draw() {
 
 void keyPressed() {
   if (key == 'r' || key == 'R') {
-
+    
     paintscreen.beginDraw();
-    paintscreen.image(bgImage,0,0);
+    paintscreen.background(155);
     paintscreen.endDraw();
     
     sprayCan.clearAll();
