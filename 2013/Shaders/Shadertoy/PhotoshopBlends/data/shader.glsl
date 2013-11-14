@@ -40,7 +40,7 @@ uniform vec2 iChannelResolution[2];
 
 // -------- Below is the code you can directly paste back and forth from www.shadertoy.com---------
 
-//  Photoshop blends by Ben
+//  Photoshop blends by ben
 //  https://www.shadertoy.com/view/XdS3RW
 
 //	License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
