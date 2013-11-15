@@ -1,3 +1,19 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class PhotoshopBlends extends PApplet {
+
 // The shader that will contain the blending code
 PShader myShader;
 
@@ -71,7 +87,7 @@ String[] blendNames = {
                         "Luminosity"
                       };
 
-void setup() {
+public void setup() {
 
   size( 512, 512, P2D );
  
@@ -83,15 +99,15 @@ void setup() {
   myShader = loadShader( "shader.glsl" );
   
   // Pass the dimensions of the viewport to the shader
-  myShader.set( "sketchSize", float(width), float(height) );
+  myShader.set( "sketchSize", PApplet.parseFloat(width), PApplet.parseFloat(height) );
   
   // Pass the images to the shader
   myShader.set( "topLayer", sourceImage ); 
   myShader.set( "lowLayer", targetImage );
 
   // Pass the resolution of the images to the shader
-  myShader.set( "topLayerResolution", float( sourceImage.width ), float( sourceImage.height ) );
-  myShader.set( "lowLayerResolution", float( targetImage.width ), float( targetImage.height ) );
+  myShader.set( "topLayerResolution", PApplet.parseFloat( sourceImage.width ), PApplet.parseFloat( sourceImage.height ) );
+  myShader.set( "lowLayerResolution", PApplet.parseFloat( targetImage.width ), PApplet.parseFloat( targetImage.height ) );
 
   // You can set the blend mode using the name directly
   myShader.set( "blendMode", BL_DIFFERENCE );
@@ -99,7 +115,7 @@ void setup() {
 }
 
 
-void draw() {
+public void draw() {
 
   // Switch mode every 100 frames
   if( frameCount % 100 == 0 && isPlaying ) {
@@ -108,7 +124,7 @@ void draw() {
   }
 
   // How much of the top layer should be blended in the lower layer?
-  float blendOpacity = float( mouseX ) / float( width );
+  float blendOpacity = PApplet.parseFloat( mouseX ) / PApplet.parseFloat( width );
   myShader.set( "blendAlpha", blendOpacity );
   println(blendOpacity);
 
@@ -146,7 +162,7 @@ void draw() {
 
 }
 
-void keyPressed() {
+public void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP) {
       blendIndex--;
@@ -161,4 +177,13 @@ void keyPressed() {
     isPlaying = !isPlaying; // start & stop looping through modes
   }
 
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "PhotoshopBlends" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }

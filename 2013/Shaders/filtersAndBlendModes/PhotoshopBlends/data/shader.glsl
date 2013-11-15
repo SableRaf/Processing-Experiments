@@ -16,9 +16,11 @@ uniform sampler2D lowLayer;    // Destination (bottom layer)
 uniform vec2 topLayerResolution;
 uniform vec2 lowLayerResolution;
 
-
+// Selected mode
 uniform int blendMode;
 
+// Opacity of the source layer
+uniform float blendAlpha;
 
 // -------- Below is the code you can directly paste back and forth from www.shadertoy.com---------
 
@@ -247,43 +249,49 @@ void main(void)
 	
 	// source texture (upper layer) note: y axis is mirrored because of Processing's inverted coordinate system
 	vec2 sPos = vec2( gl_FragCoord.x / topLayerResolution.x, 1.0 - (gl_FragCoord.y / topLayerResolution.y) );
-	vec3 s = texture2D(topLayer, sPos ).xyz;
+	vec3 s = texture2D(topLayer, sPos ).rgb;
 	
 	// destination texture (lower layer) note: y axis is mirrored because of Processing's inverted coordinate system
     vec2 dPos = vec2( gl_FragCoord.x / lowLayerResolution.x, 1.0 - (gl_FragCoord.y / lowLayerResolution.y) );
-	vec3 d = texture2D(lowLayer, dPos ).xyz;
-	
+	vec3 d = texture2D(lowLayer, dPos ).rgb;
+
 	vec3 c = vec3(0.0);
 
-		 if(blendMode==0)	c = darken(s,d);
-	else if(blendMode==1)	c = multiply(s,d);
-	else if(blendMode==2)	c = colorBurn(s,d);
-	else if(blendMode==3)	c = linearBurn(s,d);
-	else if(blendMode==4)	c = darkerColor(s,d);
+		 if(blendMode==0)	c = darken(       s,d);
+	else if(blendMode==1)	c = multiply(     s,d);
+	else if(blendMode==2)	c = colorBurn(    s,d);
+	else if(blendMode==3)	c = linearBurn(   s,d);
+	else if(blendMode==4)	c = darkerColor(  s,d);
 	
-	else if(blendMode==5)	c = lighten(s,d);
-	else if(blendMode==6)	c = screen(s,d);
-	else if(blendMode==7)	c = colorDodge(s,d);
-	else if(blendMode==8)	c = linearDodge(s,d);
-	else if(blendMode==9)	c = lighterColor(s,d);
+	else if(blendMode==5)	c = lighten(      s,d);
+	else if(blendMode==6)	c = screen(       s,d);
+	else if(blendMode==7)	c = colorDodge(   s,d);
+	else if(blendMode==8)	c = linearDodge(  s,d);
+	else if(blendMode==9)	c = lighterColor( s,d);
 	
-	else if(blendMode==10)	c = overlay(s,d);
-	else if(blendMode==11)	c = softLight(s,d);
-	else if(blendMode==12)	c = hardLight(s,d);
-	else if(blendMode==13)	c = vividLight(s,d);
-	else if(blendMode==14)	c = linearLight(s,d);
-	else if(blendMode==15)	c = pinLight(s,d);
-	else if(blendMode==16)	c = hardMix(s,d);
+	else if(blendMode==10)	c = overlay(      s,d);
+	else if(blendMode==11)	c = softLight(    s,d);
+	else if(blendMode==12)	c = hardLight(    s,d);
+	else if(blendMode==13)	c = vividLight(   s,d);
+	else if(blendMode==14)	c = linearLight(  s,d);
+	else if(blendMode==15)	c = pinLight(     s,d);
+	else if(blendMode==16)	c = hardMix(      s,d);
 	
-	else if(blendMode==17)	c = difference(s,d);
-	else if(blendMode==18)	c = exclusion(s,d);
-	else if(blendMode==19)	c = subtract(s,d);
-	else if(blendMode==20)	c = divide(s,d);
+	else if(blendMode==17)	c = difference(   s,d);
+	else if(blendMode==18)	c = exclusion(    s,d);
+	else if(blendMode==19)	c = subtract(     s,d);
+	else if(blendMode==20)	c = divide(       s,d);
 	
-	else if(blendMode==21)	c = hue(s,d);
-	else if(blendMode==22)	c = color(s,d);
-	else if(blendMode==23)	c = saturation(s,d);
-	else if(blendMode==24)	c = luminosity(s,d);
-	
-	gl_FragColor = vec4(c,1.0);
+	else if(blendMode==21)	c = hue(          s,d);
+	else if(blendMode==22)	c = color(        s,d);
+	else if(blendMode==23)	c = saturation(   s,d);
+	else if(blendMode==24)	c = luminosity(   s,d);
+
+	// limit values to the [0.0,1.0] range
+	c = clamp( c, 0.0, 1.0 );
+
+	// apply opacity
+    vec3 pixelColor = mix( d.rgb, c.rgb, max( 0.0, blendAlpha ) );
+
+	gl_FragColor = vec4( pixelColor.rgb, 1.0 );
 }
