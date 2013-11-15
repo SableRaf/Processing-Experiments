@@ -1,3 +1,28 @@
+
+//  Original shader code by ben
+//  https://www.shadertoy.com/view/XdS3RW
+
+
+//	License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+//	
+//	25 of the layer blending modes from Photoshop.
+//	
+//	The ones I couldn't figure out are from Nvidia's advanced blend equations extension spec -
+//	http://www.opengl.org/registry/specs/NV/blend_equation_advanced.txt
+//	
+//	~bj.2013
+//	
+
+
+//  Ported to Processing by Raphaël de Courville <Twitter: @sableRaph>
+//  Improvements:
+//  	- added the opacity uniform
+//      - added the option to switch between blend modes
+//      - fixed artifacts due to out-of-bound values returned by blending funtions
+//  Functions outside of main remain unchanged
+//
+
+
 #ifdef GL_ES
 precision mediump float;
 precision mediump int;
@@ -22,20 +47,6 @@ uniform int blendMode;
 // Opacity of the source layer
 uniform float blendAlpha;
 
-// -------- Below is the code you can directly paste back and forth from www.shadertoy.com---------
-
-//  Photoshop blends by ben
-//  https://www.shadertoy.com/view/XdS3RW
-
-//	License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-//	
-//	25 of the layer blending modes from Photoshop.
-//	
-//	The ones I couldn't figure out are from Nvidia's advanced blend equations extension spec -
-//	http://www.opengl.org/registry/specs/NV/blend_equation_advanced.txt
-//	
-//	~bj.2013
-//	
 
 vec3 darken( vec3 s, vec3 d )
 {
@@ -242,6 +253,7 @@ vec3 luminosity( vec3 s, vec3 d )
 	else if(maxC > 1.0) return sLum + ((c - sLum) * (1.0 - sLum)) / (maxC - sLum);
 	else return c;
 }
+
 
 void main(void)
 {
