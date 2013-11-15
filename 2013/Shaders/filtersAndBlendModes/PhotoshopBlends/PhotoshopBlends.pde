@@ -110,7 +110,6 @@ void draw() {
   // How much of the top layer should be blended in the lower layer?
   float blendOpacity = float( mouseX ) / float( width );
   myShader.set( "blendAlpha", blendOpacity );
-  println(blendOpacity);
 
   // Pass the index of the blend mode to the shader
   myShader.set( "blendMode", blendIndex );
