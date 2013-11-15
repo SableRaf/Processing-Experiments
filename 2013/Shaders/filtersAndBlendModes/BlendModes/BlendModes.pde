@@ -1,3 +1,18 @@
+
+
+// Original shader code by ben
+// https://www.shadertoy.com/view/XdS3RW
+
+// Ported to Processing by Raphaël de Courville <Twitter: @sableRaph>
+
+// Controls: 
+//  'SPACE': Play/Pause looping through blend modes
+//  'G':     Display/Hide GUI
+//  'UP':    Select previous blend mode
+//  'DOWN':  Select next blend mode
+//   Mouse:  Move pointer left and right to change opacity
+
+
 // The shader that will contain the blending code
 PShader myShader;
 
@@ -41,6 +56,9 @@ int blendIndex = 0;
 
 // Start looping through the modes?
 boolean isPlaying = true;
+
+// Show the GUI by default?
+boolean isGUI = true;
 
 // Let's store the names of the modes too
 String[] blendNames = {
@@ -123,25 +141,29 @@ void draw() {
   // Call resetShader() so that further geometry remains unaffected by the shader
   resetShader();
 
-  // Draw a nice backdrop for the text
-  fill(255, 255, 255, 200);
-  noStroke();
-  rect(0,0,width,50);
 
-  // Display the current blend mode
-  pushStyle();
-  textAlign(LEFT);
-  textSize(20);
-  fill(60);
-  text( blendIndex + ") " + blendNames[ blendIndex ], 10, 30 );
-  popStyle();
+  // Display the GUI ( press G to hide/show )
+  if(isGUI) {
+    // Draw a nice backdrop for the text
+    fill(255, 255, 255, 200);
+    noStroke();
+    rect(0,0,width,50);
 
-  pushStyle();
-  textAlign(RIGHT);
-  fill(150);
-  textSize(20);
-  text(" opacity: "+ floor(blendOpacity * 100) + "%", width - 10, 30);
-  popStyle();
+    // Display the current blend mode
+    pushStyle();
+    textAlign(LEFT);
+    textSize(20);
+    fill(60);
+    text( blendIndex + ") " + blendNames[ blendIndex ], 10, 30 );
+    popStyle();
+
+    pushStyle();
+    textAlign(RIGHT);
+    fill(150);
+    textSize(20);
+    text(" opacity: "+ floor(blendOpacity * 100) + "%", width - 10, 30);
+    popStyle();
+  }
 
 }
 
@@ -158,6 +180,9 @@ void keyPressed() {
   }
   else if ( key == ' ' ) {
     isPlaying = !isPlaying; // start & stop looping through modes
+  }
+  else if ( key == 'g' || key == 'G') {
+    isGUI = !isGUI;
   }
 
 }
