@@ -10,7 +10,7 @@ Movie movie;
 PShader myShader;
 
 // How much barrel effect do we want?
-// Values between 1.0 and 6.0 work best, but feel free to try other values
+// Values between 0.5 and 3.0 work best, but feel free to try other values
 float barrel = 2.2;
 
 void setup() {
