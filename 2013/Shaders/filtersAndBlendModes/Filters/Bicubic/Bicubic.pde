@@ -19,7 +19,7 @@ void setup() {
 
 void draw() {
 
-  background(0);
+  background(0);  
 
   // Draw the image on the scene
   image( myImage, 0, 0 );

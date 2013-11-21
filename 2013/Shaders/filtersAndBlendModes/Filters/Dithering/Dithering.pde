@@ -6,7 +6,7 @@ void setup() {
 
   size( 512, 512, P2D );
   
-  sourceImage  = loadImage( "texture.jpg" );
+  sourceImage  = loadImage( "texture.jpg" ); 
   noiseImage  = loadImage( "noise.png" );
   
   myFilter = loadShader( "shader.glsl" );
@@ -14,7 +14,7 @@ void setup() {
   myFilter.set("sketchSize", float(width), float(height));
   
   myFilter.set("noiseTexture", noiseImage);
-
+ 
 }
 
 
