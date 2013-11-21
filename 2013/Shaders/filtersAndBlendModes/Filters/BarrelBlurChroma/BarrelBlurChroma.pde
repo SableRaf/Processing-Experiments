@@ -11,7 +11,7 @@ PShader myShader;
 
 // How much barrel effect do we want?
 // Values between 1.0 and 6.0 work best, but feel free to try other values
-float barrelPower = 2.2;
+float barrel = 2.2;
 
 void setup() {
 
@@ -24,7 +24,7 @@ void setup() {
   // Load and configure the shader
   myShader = loadShader("shader.glsl");
   myShader.set("sketchSize", float(width), float(height));
-  myShader.set("barrelPower", barrelPower);
+  myShader.set("barrelPower", barrel);
 
 }
 
