@@ -7,7 +7,7 @@
 
 #ifdef GL_ES
 precision mediump float;
-precision me
+precision mediump int;
 #endif
 
 #define SIGMA 10.0
