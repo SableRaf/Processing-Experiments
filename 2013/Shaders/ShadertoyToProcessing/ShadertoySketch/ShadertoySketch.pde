@@ -1,8 +1,6 @@
+
+
 PShader myShader;
-
-// Mouse clicks
-float left = 0.0, right = 0.0;
-
 
 void setup() {
   size(640, 360, P2D);
@@ -20,17 +18,10 @@ void draw() {
   
   // Set the time in seconds
   myShader.set("iGlobalTime", millis()/1000.0);
-  
-  // Set mouse position and button clicks
-  if(mousePressed) {
-    if(mouseButton == LEFT)  left = 1.0;
-    else                     left = 0.0;
-    
-    if(mouseButton == RIGHT) right = 1.0;
-    else                     right = 0.0;
-    
-    myShader.set("iMouse", float(mouseX), float(mouseY), left, right);
-  }
+
+  // Set the date (I'm not sure what the actual range should be for these values)
+  float timeInSeconds = hour()*3600 + minute()*60 + second();
+  myShader.set("iDate", year(), month(), day(), timeInSeconds );
 
   // Apply the specified shader to any geometry drawn from this point  
   shader(myShader);
@@ -39,3 +30,19 @@ void draw() {
   rect(0, 0, width, height);  
   
 }
+
+// New mouse coords are passed to the shader only when a button is clicked...
+void mousePressed() {
+  myShader.set( "iMouse", float(mouseX), float(mouseY), 1.0, 1.0 ); // setting iMouse.zw values to 1.0 means "clicked"
+}
+
+// They keep being updated as the mouse is dragged...
+void mouseDragged() {
+  myShader.set( "iMouse", float(mouseX), float(mouseY), 1.0, 1.0 );
+}
+
+// But stop being sent when you release the mouse button
+void mouseReleased() {
+  myShader.set( "iMouse", float(mouseX), float(mouseY), 0.0, 0.0 ); // setting iMouse.zw values to 0.0 means "not clicked"
+}
+
