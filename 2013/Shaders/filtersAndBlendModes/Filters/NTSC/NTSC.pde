@@ -21,7 +21,7 @@ void setup() {
   myShader = loadShader("shader.glsl");
   myShader.set("sketchSize", float(width), float(height));
 
-}
+}     
 
 // Read each new frame of the movie
 void movieEvent(Movie m) {
