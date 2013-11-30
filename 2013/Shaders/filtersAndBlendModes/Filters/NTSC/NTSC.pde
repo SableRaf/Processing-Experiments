@@ -1,4 +1,4 @@
-
+   
 // Hold mouse click to disable the filter temporarily
 
 // The videoclip is from NASA: http://youtu.be/CBwdZ1yloHA
@@ -8,10 +8,6 @@ Movie movie;
 
 // Create the shader object
 PShader myShader;
-
-// How much barrel effect do we want?
-// Values between 0.5 and 3.0 work best, but feel free to try other values
-float barrel = 2.2;
 
 void setup() {
 
@@ -24,7 +20,6 @@ void setup() {
   // Load and configure the shader
   myShader = loadShader("shader.glsl");
   myShader.set("sketchSize", float(width), float(height));
-  myShader.set("barrelPower", barrel);
 
 }
 
