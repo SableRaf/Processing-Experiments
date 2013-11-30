@@ -6,6 +6,9 @@ precision mediump int;
 // From Processing 2.1 and up, this line is optional
 #define PROCESSING_COLOR_SHADER
 
+// if you are using the texture channels, the above should be 
+// #define PROCESSING_TEXTURE_SHADER
+
 uniform vec2 iResolution;      // viewport resolution (in pixels)
 uniform float iGlobalTime;     // shader playback time (in seconds)
 uniform vec4 iMouse;           // mouse pixel coords. xy: current (if mouse button down), zw: click
