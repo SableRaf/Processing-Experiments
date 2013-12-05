@@ -8,7 +8,7 @@
 
 // Hold mouse click to show unfiltered image
 
-PShader myFilter;
+PShader myFilter; 
 PImage  myImage;
 
 void setup() {
