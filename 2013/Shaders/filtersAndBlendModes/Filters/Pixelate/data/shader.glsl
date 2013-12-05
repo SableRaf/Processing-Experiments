@@ -6,6 +6,11 @@
 
 // Ported to Processing by Raphaël de Courville <twitter: @sableRaph>
 
+#ifdef GL_ES
+precision mediump float;
+precision mediump int;
+#endif
+
 uniform sampler2D texture;
 
 uniform vec2 sketchSize;
