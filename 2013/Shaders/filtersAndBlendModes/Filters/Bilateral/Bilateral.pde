@@ -1,5 +1,5 @@
 
-// Bilinear smoothing
+// Bilateral smoothing
 
 // Original shader by mrharicot
 // https://www.shadertoy.com/view/4dfGDH
