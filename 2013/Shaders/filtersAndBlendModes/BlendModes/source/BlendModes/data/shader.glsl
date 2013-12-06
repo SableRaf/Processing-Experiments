@@ -22,6 +22,9 @@
 //  Functions outside of main remain unchanged
 //
 
+// Adobe's W3C blending specs is an interesting reference
+// http://www.w3.org/TR/compositing-1/
+
 
 #ifdef GL_ES
 precision mediump float;
@@ -115,7 +118,7 @@ vec3 overlay( vec3 s, vec3 d )
 float softLight( float s, float d )
 {
 	return (s < 0.5) ? d - (1.0 - 2.0 * s) * d * (1.0 - d) 
-		: (d < 0.25) ? d + (2.0 * s - 1.0) * d * ((16.0 * d - 12.0) * d + 3.0) 
+		: (d < 0.25) ? d + (2.0 * s - 1.0) * d * ((16.0 * d - 12.0) * d + 4.0) 
 					 : d + (2.0 * s - 1.0) * (sqrt(d) - d);
 }
 
