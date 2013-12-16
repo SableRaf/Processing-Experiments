@@ -1,0 +1,11 @@
+
+// This is optional from Processing 2.1 and above
+#define PROCESSING_COLOR_SHADER
+
+
+void main(void)
+{
+
+	gl_FragColor = vec4 (0.0,1.0,0.0,1.0);
+	
+}
