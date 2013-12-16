@@ -22,7 +22,8 @@
 //  Functions outside of main remain unchanged
 //
 
-// Adobe's W3C blending specs is an interesting reference
+// Transparency is not supported yet
+// Look at Adobe's W3C blending specs for an interesting reference
 // http://www.w3.org/TR/compositing-1/
 
 
