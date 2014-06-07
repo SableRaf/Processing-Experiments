@@ -53,6 +53,7 @@ uniform vec2 backdropImageResolution;
 // Selected mode
 uniform int blendMode;
 
+// Mixing function (we use multiply for this example)
 vec3 multiply(vec3 b, vec3 s) {
 	return s * b;
 }
@@ -73,7 +74,7 @@ void main(void)
 	vec3  bColor = b.rgb;
 	float bAlpha = b.a;
 
-	// Step 1: Mixing (we use multiply for this example)
+	// Step 1: Mixing 
 	vec3 mix = multiply(b.rgb, s.rgb);
 
 	// Step 2: Blending 
