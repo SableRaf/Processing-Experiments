@@ -273,35 +273,128 @@ void main(void)
 
 	vec3 c = vec3(0.0);
 
-		 if(blendMode==0)	c = darken(       s,d);
-	else if(blendMode==1)	c = multiply(     s,d);
-	else if(blendMode==2)	c = colorBurn(    s,d);
-	else if(blendMode==3)	c = linearBurn(   s,d);
-	else if(blendMode==4)	c = darkerColor(  s,d);
-	
-	else if(blendMode==5)	c = lighten(      s,d);
-	else if(blendMode==6)	c = screen(       s,d);
-	else if(blendMode==7)	c = colorDodge(   s,d);
-	else if(blendMode==8)	c = linearDodge(  s,d);
-	else if(blendMode==9)	c = lighterColor( s,d);
-	
-	else if(blendMode==10)	c = overlay(      s,d);
-	else if(blendMode==11)	c = softLight(    s,d);
-	else if(blendMode==12)	c = hardLight(    s,d);
-	else if(blendMode==13)	c = vividLight(   s,d);
-	else if(blendMode==14)	c = linearLight(  s,d);
-	else if(blendMode==15)	c = pinLight(     s,d);
-	else if(blendMode==16)	c = hardMix(      s,d);
-	
-	else if(blendMode==17)	c = difference(   s,d);
-	else if(blendMode==18)	c = exclusion(    s,d);
-	else if(blendMode==19)	c = subtract(     s,d);
-	else if(blendMode==20)	c = divide(       s,d);
-	
-	else if(blendMode==21)	c = hue(          s,d);
-	else if(blendMode==22)	c = color(        s,d);
-	else if(blendMode==23)	c = saturation(   s,d);
-	else if(blendMode==24)	c = luminosity(   s,d);
+	if(blendMode < 16) {
+		if(blendMode < 8) {
+			if(blendMode < 4) {
+				if(blendMode < 2 ) {
+					if(blendMode == 0) {
+						// 0
+						c = darken(s,d);
+					} else {
+						// 1
+						c = multiply(s,d);
+					}                                        
+				} else {
+					if(blendMode == 2) {
+						// 2
+						c = colorBurn(s,d);
+					} else {
+						// 3
+						c = linearBurn(s,d);
+					}                                        
+				}                    
+			} else {
+				if(blendMode < 6) {
+					if(blendMode == 4) {
+						// 4
+						c = darkerColor(s,d);
+					} else {
+						// 5
+						c = lighten(s,d);
+					}                                        
+				} else {
+					if(blendMode == 6) {
+						// 6
+						c = screen(s,d);
+					} else {
+						// 7
+						c = colorDodge(s,d);
+					}                                        
+				}                                    
+			}                    
+		} else {
+			if(blendMode < 12) {
+				if(blendMode < 10) {
+					if(blendMode == 8) {
+						// 8
+						c = linearDodge(s,d);
+					} else {
+						// 9
+						c = lighterColor(s,d);
+					}                                        
+				} else {
+					if(blendMode == 10) {
+						// 10
+						c = overlay(s,d);
+					} else {
+						// 11
+						c = softLight(s,d);
+					}                                        
+				}                    
+			} else {
+				if(blendMode < 14) {
+					if(blendMode == 12) {
+						// 12
+						c = hardLight(s,d);
+					} else {
+						// 13
+						c = vividLight(s,d);
+					}                                        
+				} else {
+					if(blendMode == 14) {
+						// 14
+						c = linearLight(s,d);
+					} else {
+						// 15
+						c = pinLight(s,d);
+					}                                        
+				}                    
+			}                    
+		}        
+	} else {
+		if(blendMode < 24) {
+			if(blendMode < 20) {
+				if(blendMode < 18) {
+					if(blendMode == 16) {
+						// 16
+						c = hardMix(s,d);
+					} else {
+						// 17
+						c = difference(s,d);
+					}                                        
+				} else {
+					if(blendMode == 18) {
+						// 18
+						c = exclusion(s,d);
+					} else {
+						// 19
+						c = subtract(s,d);
+					}                                        
+				}                    
+			} else {
+				if(blendMode < 22) {
+					if(blendMode == 20) {
+						// 20
+						c = divide(s,d);
+					} else {
+						// 21
+						c = hue(s,d);
+					}                                        
+				} else {
+					if(blendMode == 22) {
+						// 22
+						c = color(s,d);
+					} else {
+						// 23
+						c = saturation(s,d);
+					}                                        
+				}                    
+			}                    
+		} else {
+			// 24
+			c = luminosity(s,d);
+		}
+	}
 
 	// limit values to the [0.0,1.0] range
 	c = clamp( c, 0.0, 1.0 );
