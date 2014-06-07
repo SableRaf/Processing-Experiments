@@ -73,13 +73,13 @@ void main(void)
 	vec3  bColor = b.rgb;
 	float bAlpha = b.a;
 
-	// Step 1: Mix (we use multiply for this example)
+	// Step 1: Mixing (we use multiply for this example)
 	vec3 mix = multiply(b.rgb, s.rgb);
 
-	// Step 2: Blend 
+	// Step 2: Blending 
 	vec3 blend = (1.0 - b.a) * s.rgb + b.a * mix;
 
-	// Step 3: Composite ("Source Over")
+	// Step 3: Compositing ("Source Over")
 	vec3 composite = s.a * blend + b.a * b.rgb * (1.0 - s.a);
 
 	// Step 4: Coverage
