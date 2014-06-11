@@ -17,6 +17,9 @@
 // since it is based on the built-in OpenGL glBlendFunc
 // Source: https://stackoverflow.com/questions/7054538/custom-glblendfunc-a-lot-slower-than-native
 
+// TO DO:
+//       - fix odd looking blend modes (see photoshop_ref for reference)
+
 
 // Textures
 PImage sourceImage, backdropImage;
