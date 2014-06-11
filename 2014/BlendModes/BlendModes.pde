@@ -14,6 +14,11 @@
 //  'DOWN':  Select next blend mode
 //   Mouse:  Move pointer left and right to change opacity
 
+// Note: blendMode() should be faster in most cases
+// since it is based on the built-in OpenGL glBlendFunc
+// Source: https://stackoverflow.com/questions/7054538/custom-glblendfunc-a-lot-slower-than-native
+
+
 // Textures
 PImage sourceImage, backdropImage;
 
