@@ -12,7 +12,6 @@
 //  'G':     Display/Hide GUI
 //  'UP':    Select previous blend mode
 //  'DOWN':  Select next blend mode
-//   Mouse:  Move pointer left and right to change opacity
 
 // Note: blendMode() should be faster in most cases
 // since it is based on the built-in OpenGL glBlendFunc
