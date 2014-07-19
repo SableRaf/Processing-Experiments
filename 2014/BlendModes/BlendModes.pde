@@ -17,6 +17,19 @@
 // since it is based on the built-in OpenGL glBlendFunc
 // Source: https://stackoverflow.com/questions/7054538/custom-glblendfunc-a-lot-slower-than-native
 
+// Note 2: 
+// “The OpenGL-based renderers (P2D and P3D) only support some of
+// the blending modes available in the default renderer.The reason
+// for this is that the blend equations in OpenGL allow for combinations
+// of the form dest_factor * dest_color + src_factor * src_color 
+// of the source and destination colors (see this page 
+// http://www.opengl.org/wiki/Blending for an extensive discussion of blending in OpenGL). 
+// Complex blending modes typically available in photo editing tools, 
+// like hard light or dodge, cannot be modeled with those equations. 
+// However, we can implement virtually any blending math directly in the 
+// fragment shader.” — Source: Examples>Topics>Shaders>Custom Blend
+
+
 // TO DO:
 //       - fix odd looking blend modes (see photoshop_ref for reference)
 
