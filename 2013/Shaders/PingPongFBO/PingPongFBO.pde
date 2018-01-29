@@ -41,7 +41,7 @@
 */
 
 PImage image; // Source texture to be refracted
-PImage scene; // Image to be displayed
+//PImage scene; // Image to be displayed
 
 PShader rippleShader, refractionShader;
 
@@ -65,7 +65,7 @@ void setup() {
 
   testScene = createGraphics(width, height, P2D);
   
-  scene = new PImage(width,height);
+  //scene = new PImage(width,height);
   
   // Set ping and pong to black for the first pass
   ping.beginDraw();
@@ -115,10 +115,10 @@ void draw() {
                   pong ;
                 
   // Copy to final scene texture
-  scene.copy(img, 0, 0, width, height, 0, 0, width, height);
+  //scene.copy(img, 0, 0, width, height, 0, 0, width, height);
     
   // Display result
-  image(scene, 0, 0, width, height);
+  image(img, 0, 0, width, height);
 }
 
 void keyReleased() {
@@ -132,4 +132,3 @@ void keyReleased() {
     println(message);
   }
 }
-
