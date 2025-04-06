@@ -1,11 +1,20 @@
-// Global variables for button states
+// Global variables for button states and window control
 boolean overCloseBtn = false;
 boolean overMinBtn = false;
 boolean overFullBtn = false;
 boolean isFullscreen = false;
 int prevWidth, prevHeight, prevX, prevY;
+
+// Dragging state
 boolean isDragging = false;
 int dragOffsetX, dragOffsetY;
+
+// Resizing state
+boolean isResizing = false;
+boolean overResizeArea = false;
+int resizeStartX, resizeStartY;
+int initialWidth, initialHeight;
+int resizeHandleSize = 15;
 
 void setup() {
   size(400, 300);
@@ -23,7 +32,7 @@ void setup() {
   java.awt.Frame frame = ((processing.awt.PSurfaceAWT.SmoothCanvas) surface.getNative()).getFrame();
   frame.removeNotify();
   frame.setUndecorated(true);
-  frame.setResizable(false);
+  frame.setResizable(true); // Allow Java-level resizing
   
   frame.addNotify();
   surface.setVisible(true);
@@ -73,6 +82,19 @@ void draw() {
     line(width-70, 20, width-80, 20);
   }
   
+  // Draw resize handle indicator
+  noFill();
+  if (overResizeArea) {
+    stroke(0, 120, 255);
+    strokeWeight(2);
+  } else {
+    stroke(150);
+    strokeWeight(1);
+  }
+  // Bottom-right corner resize indicator
+  line(width-resizeHandleSize, height, width, height-resizeHandleSize);
+  line(width, height-resizeHandleSize/2, width-resizeHandleSize/2, height);
+  
   // Reset stroke settings
   strokeWeight(1);
   
@@ -107,6 +129,15 @@ void mousePressed() {
     dragOffsetY = mousePos.y - framePos.y;
   }
   
+  // Check if mouse is over resize area
+  if (overResizeArea) {
+    isResizing = true;
+    resizeStartX = mouseX;
+    resizeStartY = mouseY;
+    initialWidth = width;
+    initialHeight = height;
+  }
+  
   // Handle button clicks
   if (overCloseBtn) {
     exit(); // Close the application
@@ -125,10 +156,23 @@ void mousePressed() {
 
 void mouseReleased() {
   isDragging = false;
+  isResizing = false;
 }
 
 void mouseMoved() {
   checkButtons();
+  
+  // Check if mouse is over resize area (bottom-right corner)
+  overResizeArea = (mouseX > width - resizeHandleSize && mouseY > height - resizeHandleSize);
+  
+  // Change cursor based on mouse position
+  if (overResizeArea) {
+    //cursor(SOUTHEAST_RESIZE);
+  } else if (mouseY < 30 && !overCloseBtn && !overMinBtn && !overFullBtn) {
+    cursor(MOVE);
+  } else {
+    cursor(ARROW);
+  }
 }
 
 void checkButtons() {
@@ -139,6 +183,7 @@ void checkButtons() {
 }
 
 void mouseDragged() {
+  // Handle window dragging
   if (isDragging) {
     // Get current mouse position in screen coordinates
     java.awt.Point mousePos = java.awt.MouseInfo.getPointerInfo().getLocation();
@@ -152,8 +197,23 @@ void mouseDragged() {
     frame.setLocation(newX, newY);
   }
   
+  // Handle window resizing
+  if (isResizing) {
+    // Calculate new size
+    int newWidth = max(200, initialWidth + (mouseX - resizeStartX));
+    int newHeight = max(150, initialHeight + (mouseY - resizeStartY));
+    
+    // Resize window
+    surface.setSize(newWidth, newHeight);
+  }
+  
   // Update button hover states when dragging
   checkButtons();
+  
+  // Update cursor for resize area
+  if (isResizing) {
+    //cursor(SOUTHEAST_RESIZE);
+  }
 }
 
 void keyPressed() {
